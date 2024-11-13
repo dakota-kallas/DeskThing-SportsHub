@@ -31,6 +31,7 @@ class SportsHubService {
       'https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&ysp_redesign=1&ysp_platform=desktop&leagues=nba&date=2024-11-12&v=2&ysp_enable_last_update=1';
     const games = await this.fetchNBAData(url);
     this.sportsHubData.games = games;
+    this.deskthing.sendLog(`Sports Hub data was fetched!`);
 
     const now = new Date();
     const timeString = now.toLocaleTimeString([], {
@@ -98,8 +99,13 @@ class SportsHubService {
   // Function to fetch and parse data from the API
   private async fetchNBAData(url: string): Promise<Game[]> {
     try {
+      DeskThing.sendLog('[1] Fetching Sports Hub data... (URL: ' + url + ')');
       const response = await fetch(url);
+      DeskThing.sendLog('[2] Fetching Sports Hub data...');
       if (!response.ok) {
+        this.deskthing.sendLog(
+          'Error fetching Sports Hub Data: ' + response.statusText
+        );
         throw new Error(`Error fetching data: ${response.statusText}`);
       }
 
@@ -149,6 +155,7 @@ class SportsHubService {
 
       return games;
     } catch (error) {
+      this.deskthing.sendLog('Error fetching or parsing Sports Hub Data!');
       console.error('Error fetching or parsing data:', error);
       return []; // Return an empty array in case of error
     }

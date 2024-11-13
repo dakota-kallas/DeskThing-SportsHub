@@ -1,4 +1,5 @@
 import { Game as GameData } from '../../stores/sportsHubStore';
+import nbaLogo from '../../assets/logo/nba.png';
 import './pregame.css';
 
 interface PreGameProps {
@@ -15,8 +16,9 @@ export enum GameDisplaySize {
 const PreGame = ({ gameData, size }: PreGameProps) => {
   return (
     <div className='game game--small'>
-      <div className='game--time'>
-        <p>{gameData.status.toUpperCase()}</p>
+      <div className='game--head'>
+        <img className='league--logo' src={nbaLogo} />
+        <p className='game--time'>{gameData.status.toUpperCase()}</p>
       </div>
       <div className='game--matchup'>
         <div className='team'>

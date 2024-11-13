@@ -8,7 +8,7 @@ class SportsHubService {
   private updateTaskId: (() => void) | null = null;
   private deskthing: typeof DeskThing;
   private static instance: SportsHubService | null = null;
-  private refreshInterval: number = 5;
+  private refreshInterval: number = 1;
 
   constructor() {
     this.deskthing = DeskThing;
@@ -27,12 +27,16 @@ class SportsHubService {
     this.deskthing.sendLog(`Fetching Sports Hub data from Finnhub API.`);
     this.sportsHubData = {} as SportsHubData;
 
-    const url =
-      'https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&ysp_redesign=1&ysp_platform=desktop&leagues=nba&date=2024-11-12&v=2&ysp_enable_last_update=1';
+    const now = new Date();
+    const localYear = now.getFullYear();
+    const localMonth = String(now.getMonth() + 1).padStart(2, '0');
+    const localDay = String(now.getDate()).padStart(2, '0');
+    const localDate = `${localYear}-${localMonth}-${localDay}`;
+
+    const url = `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&ysp_redesign=1&ysp_platform=desktop&leagues=nba&date=${localDate}&v=2&ysp_enable_last_update=1`;
     const games = await this.fetchNBAData(url);
     this.sportsHubData.games = games;
 
-    const now = new Date();
     const timeString = now.toLocaleTimeString([], {
       hour: '2-digit',
       minute: '2-digit',
@@ -131,7 +135,7 @@ class SportsHubService {
     try {
       this.deskthing.sendLog('Updating settings');
       this.refreshInterval =
-        (data.settings.refreshInterval.value as number) || 5;
+        (data.settings.refreshInterval.value as number) || 1;
       this.updateSportsHub();
     } catch (error) {
       this.deskthing.sendLog('Error updating Sports Hub data: ' + error);

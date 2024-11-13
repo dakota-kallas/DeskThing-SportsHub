@@ -1,7 +1,7 @@
 import {
   DeskThing as DK,
+  SettingsMultiSelect,
   SettingsNumber,
-  SettingsString,
   SocketData,
 } from 'deskthing-server';
 const DeskThing = DK.getInstance();
@@ -56,8 +56,46 @@ const setupSettings = async () => {
     min: 1,
   } as SettingsNumber;
 
+  const favoriteNBATeamsSetting = {
+    label: 'Favorite NBA Teams',
+    value: [],
+    type: 'multiselect',
+    options: [
+      { label: 'Atlanta Hawks', value: 'ATL' },
+      { label: 'Brooklyn Nets', value: 'BKN' },
+      { label: 'Boston Celtics', value: 'BOS' },
+      { label: 'Charlotte Hornets', value: 'CHA' },
+      { label: 'Chicago Bulls', value: 'CHI' },
+      { label: 'Cleveland Cavaliers', value: 'CLE' },
+      { label: 'Dallas Mavericks', value: 'DAL' },
+      { label: 'Denver Nuggets', value: 'DEN' },
+      { label: 'Detroit Pistons', value: 'DET' },
+      { label: 'Golden State Warriors', value: 'GSW' },
+      { label: 'Houston Rockets', value: 'HOU' },
+      { label: 'Indiana Pacers', value: 'IND' },
+      { label: 'Los Angeles Clippers', value: 'LAC' },
+      { label: 'Los Angeles Lakers', value: 'LAL' },
+      { label: 'Memphis Grizzlies', value: 'MEM' },
+      { label: 'Miami Heat', value: 'MIA' },
+      { label: 'Milwaukee Bucks', value: 'MIL' },
+      { label: 'Minnesota Timberwolves', value: 'MIN' },
+      { label: 'New Orleans Pelicans', value: 'NOH' },
+      { label: 'New York Knicks', value: 'NYK' },
+      { label: 'Oklahoma City Thunder', value: 'OKC' },
+      { label: 'Orlando Magic', value: 'ORL' },
+      { label: 'Philadelphia 76ers', value: 'PHI' },
+      { label: 'Phoenix Suns', value: 'PHO' },
+      { label: 'Portland Trail Blazers', value: 'POR' },
+      { label: 'Sacramento Kings', value: 'SAC' },
+      { label: 'Toronto Raptors', value: 'TOR' },
+      { label: 'Utah Jazz', value: 'UTH' },
+      { label: 'Washington Wizards', value: 'WAS' },
+    ],
+  } as SettingsMultiSelect;
+
   DeskThing.addSettings({
     refreshInterval: refreshIntervalSetting,
+    favoriteNBATeams: favoriteNBATeamsSetting,
   });
 };
 

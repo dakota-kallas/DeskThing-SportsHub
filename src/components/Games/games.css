@@ -21,11 +21,16 @@
   flex-wrap: wrap;
   align-content: flex-start;
   overflow-y: auto;
-  max-height: 344px;
+  max-height: 400px;
 }
 
 /* Work around because flex gap is not supported */
 .gamesContainer--small > * {
-  margin-bottom: 8px; /* Default bottom margin for spacing */
   margin-right: 8px; /* Default bottom margin for spacing */
+  margin-bottom: 8px; /* Default bottom margin for spacing */
+}
+
+/* Work around because flex gap is not supported */
+.gamesContainer--small > *:nth-child(2n) {
+  margin-bottom: 0px; /* Default bottom margin for spacing */
 }

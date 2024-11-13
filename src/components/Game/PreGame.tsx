@@ -27,7 +27,7 @@ const PreGame = ({ gameData, size }: PreGameProps) => {
               <p className='team--lastName'>{gameData.homeTeam.lastName}</p>
             </div>
           </div>
-          <p>{gameData.homeTeam.record}</p>
+          <p className='team--record'>{gameData.homeTeam.record}</p>
         </div>
         <div className='team'>
           <div className='team--info'>
@@ -37,7 +37,7 @@ const PreGame = ({ gameData, size }: PreGameProps) => {
               <p className='team--lastName'>{gameData.awayTeam.lastName}</p>
             </div>
           </div>
-          <p>{gameData.homeTeam.record}</p>
+          <p className='team--record'>{gameData.homeTeam.record}</p>
         </div>
         <div className='game--info'>
           <p>TV: {gameData.tvCoverage}</p>

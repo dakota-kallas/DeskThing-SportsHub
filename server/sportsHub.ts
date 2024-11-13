@@ -2,6 +2,7 @@ import { DeskThing } from './index';
 import { DataInterface } from 'deskthing-server';
 import {
   Game,
+  GameStatusType,
   Player,
   SportsHubData,
   Team,
@@ -14,6 +15,7 @@ class SportsHubService {
   private deskthing: typeof DeskThing;
   private static instance: SportsHubService | null = null;
   private refreshInterval: number = 1;
+  private favoriteNBATeams: string[] = [];
 
   constructor() {
     this.deskthing = DeskThing;
@@ -114,9 +116,17 @@ class SportsHubService {
         ])
       );
 
+      // Define the sorting order based on status type priority
+      const statusOrder: { [key in GameStatusType]: number } = {
+        [GameStatusType.Pregame]: 2,
+        [GameStatusType.Live]: 1,
+        [GameStatusType.Final]: 3,
+        [GameStatusType.Postponed]: 4,
+      };
+
       // Parse NBA games
-      const games: Game[] = Object.values(data.service.scoreboard.games).map(
-        (game: any) => ({
+      let games: Game[] = Object.values(data.service.scoreboard.games)
+        .map((game: any) => ({
           gameId: game.gameid,
           startTime: game.start_time,
           homeTeam: teamsMap[game.home_team_id],
@@ -133,8 +143,21 @@ class SportsHubService {
             awayPoints: period.away_points,
             homePoints: period.home_points,
           })),
-        })
-      );
+        }))
+        .sort((a, b) => statusOrder[a.statusType] - statusOrder[b.statusType]);
+
+      if (this.favoriteNBATeams.length > 0) {
+        // Sort games based on whether a favorite team is involved
+        games = games.sort((a, b) => {
+          const aIsFavorite =
+            this.favoriteNBATeams.includes(a.homeTeam.abbreviation) ||
+            this.favoriteNBATeams.includes(a.awayTeam.abbreviation);
+          const bIsFavorite =
+            this.favoriteNBATeams.includes(b.homeTeam.abbreviation) ||
+            this.favoriteNBATeams.includes(b.awayTeam.abbreviation);
+          return aIsFavorite === bIsFavorite ? 0 : aIsFavorite ? -1 : 1;
+        });
+      }
 
       return games;
     } catch (error) {
@@ -168,6 +191,8 @@ class SportsHubService {
       this.deskthing.sendLog('Updating settings');
       this.refreshInterval =
         (data.settings.refreshInterval.value as number) || 1;
+      this.favoriteNBATeams =
+        (data.settings.favoriteNBATeams.value as string[]) || [];
       this.updateSportsHub();
     } catch (error) {
       this.deskthing.sendLog('Error updating Sports Hub data: ' + error);

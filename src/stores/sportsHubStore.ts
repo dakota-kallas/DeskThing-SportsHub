@@ -54,7 +54,7 @@ export type Game = {
   homeScore: string | null;
   awayScore: string | null;
   status: string;
-  statusType: string;
+  statusType: GameStatusType;
   tvCoverage: string;
   gameType: string;
   periods: Period[];

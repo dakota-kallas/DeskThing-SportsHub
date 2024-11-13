@@ -15,11 +15,21 @@ export type SportsHubData = {
 export type Team = {
   id: string;
   name: string;
+  firstName: string;
+  lastName: string;
   abbreviation: string;
   conference: string;
   division: string;
   record: string;
   logo: string;
+};
+
+export type Player = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  teamId: string;
+  uniformNumber: string;
 };
 
 export type Period = {
@@ -29,6 +39,13 @@ export type Period = {
   homePoints: string;
 };
 
+export enum GameStatusType {
+  Pregame = 'status.type.pregame',
+  Live = 'status.type.in_progress',
+  Final = 'status.type.final',
+  Postponed = 'status.type.postponed',
+}
+
 export type Game = {
   gameId: string;
   startTime: string;
@@ -37,6 +54,8 @@ export type Game = {
   homeScore: string | null;
   awayScore: string | null;
   status: string;
+  statusType: string;
+  tvCoverage: string;
   gameType: string;
   periods: Period[];
 };

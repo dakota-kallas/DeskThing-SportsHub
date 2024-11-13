@@ -1,0 +1,31 @@
+.contentContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  height: calc(100% - 32px);
+  padding: 8px 8px 16px 8px;
+}
+
+/* Work around because flex gap is not supported */
+.contentContainer > *:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.gamesContainer {
+  display: flex;
+  width: 100%;
+}
+
+.gamesContainer--small {
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  overflow-y: auto;
+  max-height: 344px;
+}
+
+/* Work around because flex gap is not supported */
+.gamesContainer--small > * {
+  margin-bottom: 8px; /* Default bottom margin for spacing */
+  margin-right: 8px; /* Default bottom margin for spacing */
+}

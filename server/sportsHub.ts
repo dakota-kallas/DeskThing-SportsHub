@@ -1,6 +1,11 @@
 import { DeskThing } from './index';
 import { DataInterface } from 'deskthing-server';
-import { Game, SportsHubData, Team } from '../src/stores/sportsHubStore';
+import {
+  Game,
+  Player,
+  SportsHubData,
+  Team,
+} from '../src/stores/sportsHubStore';
 
 class SportsHubService {
   private sportsHubData: SportsHubData;
@@ -24,7 +29,7 @@ class SportsHubService {
   }
 
   private async updateSportsHub() {
-    this.deskthing.sendLog(`Fetching Sports Hub data from Finnhub API.`);
+    this.deskthing.sendLog(`Fetching Sports Hub data from API.`);
     this.sportsHubData = {} as SportsHubData;
 
     const now = new Date();
@@ -32,6 +37,9 @@ class SportsHubService {
     const localMonth = String(now.getMonth() + 1).padStart(2, '0');
     const localDay = String(now.getDate()).padStart(2, '0');
     const localDate = `${localYear}-${localMonth}-${localDay}`;
+
+    const teamUrl =
+      'https://sports.yahoo.com/site/api/resource/sports.league.positionsteams;league=nba?lang=en-US&region=US';
 
     const url = `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&ysp_redesign=1&ysp_platform=desktop&leagues=nba&date=${localDate}&v=2&ysp_enable_last_update=1`;
     const games = await this.fetchNBAData(url);
@@ -70,16 +78,38 @@ class SportsHubService {
 
       // Parse NBA teams
       const teamsMap: { [id: string]: Team } = Object.fromEntries(
-        Object.values(data.service.scoreboard.teams).map((team: any) => [
-          team.team_id,
+        await Promise.all(
+          Object.values(data.service.scoreboard.teams).map(
+            async (team: any) => [
+              team.team_id,
+              {
+                id: team.team_id,
+                firstName: team.first_name,
+                lastName: team.last_name,
+                name: team.full_name,
+                abbreviation: team.abbr,
+                conference: team.conference,
+                division: team.division,
+                record: teamRecords[team.team_id] ?? 'N/A',
+                logo: await DeskThing.encodeImageFromUrl(
+                  (teamLogos[team.team_id] ?? '').replace(/\\\//g, '/')
+                ),
+              },
+            ]
+          )
+        )
+      );
+
+      // Parse NBA players
+      const playersMap: { [id: string]: Player } = Object.fromEntries(
+        Object.values(data.service.scoreboard.players).map((player: any) => [
+          player.player_id,
           {
-            id: team.team_id,
-            name: team.full_name,
-            abbreviation: team.abbr,
-            conference: team.conference,
-            division: team.division,
-            record: teamRecords[team.team_id] ?? 'N/A', // Use record from teamRecords
-            logo: (teamLogos[team.team_id] ?? '').replace(/\\\//g, '/'), // Clean up logo URL
+            id: player.player_id,
+            firstName: player.first_name,
+            lastName: player.last_name,
+            teamId: player.team_id,
+            uniformNumber: player.uniform_number,
           },
         ])
       );
@@ -94,7 +124,9 @@ class SportsHubService {
           homeScore: game.total_home_points,
           awayScore: game.total_away_points,
           status: game.status_display_name,
+          statusType: game.status_type,
           gameType: game.game_type,
+          tvCoverage: game.tv_coverage,
           periods: game.game_periods.map((period: any) => ({
             periodId: period.period_id,
             name: period.display_name,

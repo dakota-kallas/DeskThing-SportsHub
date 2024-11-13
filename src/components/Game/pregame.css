@@ -1,0 +1,68 @@
+.game {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--surface-100);
+  color: var(--text);
+  padding: 8px;
+  border-radius: 8px;
+  height: 160px;
+  overflow: hidden;
+}
+
+.game--small {
+  width: 250px;
+}
+
+.game--time {
+  display: flex;
+  justify-content: end;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.game--info {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  font-size: 12px;
+  color: var(--sub-text);
+}
+
+.game--matchup {
+  display: flex;
+  flex-direction: column;
+}
+
+.game--matchup > *:first-child {
+  margin-bottom: 8px;
+}
+
+.team {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.team--info {
+  display: flex;
+  align-items: center;
+}
+
+.team--name {
+  display: flex;
+  flex-direction: column;
+}
+
+.team--firstName {
+  font-weight: bold;
+}
+
+.team--lastName {
+  font-size: 14px;
+  margin-top: -4px;
+}
+
+.team--logo {
+  height: 50px;
+  margin-right: 8px;
+}

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { SportsHubStore } from './stores';
 import { SportsHubData } from './stores/sportsHubStore';
+import Games from './components/Games/Games';
+import Header from './components/Header/Header';
 
 const App: React.FC = () => {
   const sportsHubStore = SportsHubStore;
@@ -27,7 +29,8 @@ const App: React.FC = () => {
 
   return (
     <div className='appContainer w-screen h-screen'>
-      {sportsHubData && <p>{JSON.stringify(sportsHubData)}</p>}
+      <Header lastUpdated={sportsHubData?.lastUpdated} />
+      <Games sportsHubData={sportsHubData} />
     </div>
   );
 };

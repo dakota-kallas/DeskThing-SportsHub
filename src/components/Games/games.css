@@ -63,3 +63,20 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #888; /* Lighter gray when hovered */
 }
+
+.messageContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--sub-text);
+}
+
+.message {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--text);
+}

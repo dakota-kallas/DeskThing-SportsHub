@@ -32,6 +32,15 @@ const Games = ({ sportsHubData }: GamesProps) => {
     };
   }, [contentContainerRef.current]);
 
+  if (!sportsHubData?.allGames || sportsHubData?.allGames?.length === 0) {
+    return (
+      <div className='messageContainer'>
+        <p className='message'>No games found for today</p>
+        <p>If you we're expecting some, double-check your Settings</p>
+      </div>
+    );
+  }
+
   return (
     <div className='contentContainer' ref={contentContainerRef}>
       <div className='gamesContainer gamesContainer--small'>

@@ -62,6 +62,10 @@ Current as of DeskThing v0.9.2
 
 ## Troubleshooting
 
+### Specific Matchups are not showing up
+
+1. You will only see matchups that are scheduled for the current day
+
 ### Data not refreshing / loading
 
 1. Check you've properly configured your `Refresh Interval` in the `Settings` page for **Sports Hub**

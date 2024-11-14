@@ -3,14 +3,27 @@ import { SocketData } from 'deskthing-server';
 
 export type SportsHubData = {
   /**
-   * Game list
+   * Game list (all leagues)
    */
-  games: Game[];
+  allGames: Game[];
+  /**
+   * NBA Game list
+   */
+  nbaGames: Game[];
+  /**
+   * NBA Game list
+   */
+  nflGames: Game[];
   /**
    * Last Refreshed Time
    */
   lastUpdated?: string;
 };
+
+export enum League {
+  NBA = 'NBA',
+  NFL = 'NFL',
+}
 
 export type Team = {
   id: string;
@@ -39,15 +52,11 @@ export type Period = {
   homePoints: string;
 };
 
-export enum GameStatusType {
-  Pregame = 'status.type.pregame',
-  Live = 'status.type.in_progress',
-  Final = 'status.type.final',
-  Postponed = 'status.type.postponed',
-}
+export type GameStatusType = 'pregame' | 'in_progress' | 'final' | 'postponed';
 
 export type Game = {
   gameId: string;
+  league: string;
   startTime: string;
   homeTeam: Team;
   awayTeam: Team;
@@ -58,6 +67,7 @@ export type Game = {
   tvCoverage: string;
   gameType: string;
   periods: Period[];
+  week: string;
 };
 
 type SportsHubListener = (sportsHubData: SportsHubData | null) => void;

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { GameStatusType, SportsHubData } from '../../stores/sportsHubStore';
+import { SportsHubData } from '../../stores/sportsHubStore';
 import './games.css';
-import PreGame, { GameDisplaySize } from '../Game/PreGame';
+import GameSmall from '../Game/PreGame/GameSmall';
 
 interface GamesProps {
   sportsHubData: SportsHubData | null;
@@ -41,20 +41,9 @@ const Games = ({ sportsHubData }: GamesProps) => {
   );
 
   function GetGameNodes() {
-    return sportsHubData?.games.map((game) => {
-      switch (game.statusType) {
-        case GameStatusType.Pregame:
-          return (
-            <PreGame
-              key={game.gameId}
-              gameData={game}
-              size={GameDisplaySize.Small}
-            />
-          );
-        default:
-          return null;
-      }
-    });
+    return sportsHubData?.allGames?.map((game) => (
+      <GameSmall key={game.gameId} gameData={game} />
+    ));
   }
 };
 

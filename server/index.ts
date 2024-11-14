@@ -2,6 +2,7 @@ import {
   DeskThing as DK,
   SettingsMultiSelect,
   SettingsNumber,
+  SettingsSelect,
   SocketData,
 } from 'deskthing-server';
 const DeskThing = DK.getInstance();
@@ -56,6 +57,27 @@ const setupSettings = async () => {
     min: 1,
   } as SettingsNumber;
 
+  const favoriteLeagueSetting = {
+    label: 'Favorite League',
+    value: 'NONE',
+    type: 'select',
+    options: [
+      { label: 'None', value: 'NONE' },
+      { label: 'NFL', value: 'NFL' },
+      { label: 'NBA', value: 'NBA' },
+    ],
+  } as SettingsSelect;
+
+  const leaguesToShowSetting = {
+    label: 'Leagues To Show',
+    value: ['NFL', 'NBA'],
+    type: 'multiselect',
+    options: [
+      { label: 'NFL', value: 'NFL' },
+      { label: 'NBA', value: 'NBA' },
+    ],
+  } as SettingsMultiSelect;
+
   const favoriteNBATeamsSetting = {
     label: 'Favorite NBA Teams',
     value: [],
@@ -93,9 +115,52 @@ const setupSettings = async () => {
     ],
   } as SettingsMultiSelect;
 
+  const favoriteNFLTeamsSetting = {
+    label: 'Favorite NFL Teams',
+    value: [],
+    type: 'multiselect',
+    options: [
+      { label: 'Arizona Cardinals', value: 'ARI' },
+      { label: 'Atlanta Falcons', value: 'ATL' },
+      { label: 'Baltimore Ravens', value: 'BAL' },
+      { label: 'Buffalo Bills', value: 'BUF' },
+      { label: 'Carolina Panthers', value: 'CAR' },
+      { label: 'Chicago Bears', value: 'CHI' },
+      { label: 'Cincinnati Bengals', value: 'CIN' },
+      { label: 'Cleveland Browns', value: 'CLE' },
+      { label: 'Dallas Cowboys', value: 'DAL' },
+      { label: 'Denver Broncos', value: 'DEN' },
+      { label: 'Detroit Lions', value: 'DET' },
+      { label: 'Green Bay Packers', value: 'GB' },
+      { label: 'Houston Texans', value: 'HOU' },
+      { label: 'Indianapolis Colts', value: 'IND' },
+      { label: 'Jacksonville Jaguars', value: 'JAX' },
+      { label: 'Kansas City Chiefs', value: 'KC' },
+      { label: 'Miami Dolphins', value: 'MIA' },
+      { label: 'Minnesota Vikings', value: 'MIN' },
+      { label: 'New England Patriots', value: 'NE' },
+      { label: 'New Orleans Saints', value: 'NO' },
+      { label: 'New York Giants', value: 'NYG' },
+      { label: 'New York Jets', value: 'NYJ' },
+      { label: 'Las Vegas Raiders', value: 'LV' },
+      { label: 'Philadelphia Eagles', value: 'PHI' },
+      { label: 'Pittsburgh Steelers', value: 'PIT' },
+      { label: 'Los Angeles Chargers', value: 'LAC' },
+      { label: 'San Francisco 49ers', value: 'SF' },
+      { label: 'Seattle Seahawks', value: 'SEA' },
+      { label: 'Los Angeles Rams', value: 'LAR' },
+      { label: 'Tampa Bay Buccaneers', value: 'TB' },
+      { label: 'Tennessee Titans', value: 'TEN' },
+      { label: 'Washington Commanders', value: 'WAS' },
+    ],
+  } as SettingsMultiSelect;
+
   DeskThing.addSettings({
     refreshInterval: refreshIntervalSetting,
+    favoriteLeague: favoriteLeagueSetting,
+    leaguesToShow: leaguesToShowSetting,
     favoriteNBATeams: favoriteNBATeamsSetting,
+    favoriteNFLTeams: favoriteNFLTeamsSetting,
   });
 };
 

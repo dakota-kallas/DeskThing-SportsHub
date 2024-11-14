@@ -1,11 +1,12 @@
 .game {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   background-color: var(--surface-100);
   color: var(--text);
   padding: 8px;
   border-radius: 8px;
-  height: 150px;
+  height: 190px;
   overflow: hidden;
 }
 
@@ -14,7 +15,7 @@
 }
 
 .league--logo {
-  height: 20px;
+  height: 24px;
 }
 
 .game--head {
@@ -24,12 +25,12 @@
 
 .game--time {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .game--info {
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
   align-items: center;
   font-size: 12px;
   color: var(--sub-text);
@@ -42,6 +43,10 @@
 
 .game--matchup > *:first-child {
   margin-bottom: 8px;
+}
+
+.game--matchup > *:nth-child(2) {
+  margin-bottom: 2px;
 }
 
 .team {
@@ -62,18 +67,20 @@
 
 .team--firstName {
   font-weight: bold;
+  font-size: 16px;
 }
 
 .team--lastName {
-  font-size: 14px;
+  font-size: 16px;
   margin-top: -4px;
 }
 
 .team--record {
   font-weight: bold;
+  font-size: 16px;
 }
 
 .team--logo {
-  height: 45px;
+  height: 50px;
   margin-right: 8px;
 }

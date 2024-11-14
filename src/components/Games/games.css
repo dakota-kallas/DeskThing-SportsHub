@@ -13,6 +13,7 @@
 
 .gamesContainer {
   display: flex;
+  flex: 1 1 auto;
   width: 100%;
 }
 
@@ -21,16 +22,44 @@
   flex-wrap: wrap;
   align-content: flex-start;
   overflow-y: auto;
-  max-height: 400px;
 }
 
 /* Work around because flex gap is not supported */
 .gamesContainer--small > * {
-  margin-right: 8px; /* Default bottom margin for spacing */
+  margin-right: 8px; /* Default right margin for spacing */
   margin-bottom: 8px; /* Default bottom margin for spacing */
 }
 
 /* Work around because flex gap is not supported */
 .gamesContainer--small > *:nth-child(2n) {
   margin-bottom: 0px; /* Default bottom margin for spacing */
+}
+
+/* Work around because flex gap is not supported */
+.gamesContainer > :last-child {
+  margin-right: 32px; /* Default right margin for spacing */
+}
+
+/* Style the scrollbar */
+::-webkit-scrollbar {
+  width: 12px; /* Width of the scrollbar */
+  height: 12px; /* Height of the scrollbar (for horizontal scroll) */
+}
+
+/* Style the scrollbar track (background) */
+::-webkit-scrollbar-track {
+  background: #2c2c2c; /* Dark background for the track */
+  border-radius: 6px;
+}
+
+/* Style the scrollbar thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+  background: #555; /* Darker gray for the thumb */
+  border-radius: 10px; /* Rounded corners for the thumb */
+  border-radius: 6px;
+}
+
+/* Style the scrollbar thumb when hovered */
+::-webkit-scrollbar-thumb:hover {
+  background: #888; /* Lighter gray when hovered */
 }

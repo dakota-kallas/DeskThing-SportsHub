@@ -63,10 +63,8 @@ class SportsHubService {
 
     // Team: 'https://sports.yahoo.com/site/api/resource/sports.league.positionsteams;league=nba?lang=en-US&region=US';
 
-    // Soccer: https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=2024-11-23&v=2
-
     if (this.leaguesToShow.includes('MLS')) {
-      const soccerUrl = `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=2024-11-23&v=2`;
+      const soccerUrl = `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=${localDate}&v=2`;
       let mlsGames = await this.fetchData(soccerUrl, 'MLS');
 
       if (this.favoriteLeague !== 'NONE') {
@@ -96,7 +94,7 @@ class SportsHubService {
     if (this.leaguesToShow.includes('NFL')) {
       const nflUrl = encodeURI(
         // `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=nfl&season=current&sched_states=2&v=2&date=${localDate}`
-        `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=nfl&season=current&sched_states=2&v=2&date=2024-11-17`
+        `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=nfl&season=current&sched_states=2&v=2&date=${localDate}`
       );
       let nflGames = await this.fetchData(nflUrl, 'NFL');
 

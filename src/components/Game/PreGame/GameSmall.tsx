@@ -1,6 +1,7 @@
 import { Game as GameData, League } from '../../../stores/sportsHubStore';
 import nbaLogo from '../../../assets/logo/nba.png';
 import nflLogo from '../../../assets/logo/nfl.png';
+import mlsLogo from '../../../assets/logo/mls.png';
 import './gamesmall.css';
 
 interface GameSmallProps {
@@ -16,6 +17,9 @@ const GameSmall = ({ gameData }: GameSmallProps) => {
       break;
     case League.NFL:
       logo = nflLogo;
+      break;
+    case League.MLS:
+      logo = mlsLogo;
       break;
     default:
       logo = '';
@@ -67,6 +71,11 @@ const GameSmall = ({ gameData }: GameSmallProps) => {
       break;
   }
 
+  let recordClass = 'team--record';
+  if (gameData.league === League.MLS) {
+    recordClass += ' team--smallText';
+  }
+
   return (
     <div className='game game--small'>
       <div className='game--head'>
@@ -82,7 +91,7 @@ const GameSmall = ({ gameData }: GameSmallProps) => {
               <p className='team--lastName'>{gameData.homeTeam.lastName}</p>
             </div>
           </div>
-          <p className='team--record'>{homeData}</p>
+          <p className={recordClass}>{homeData}</p>
         </div>
         <div className='team'>
           <div className='team--info'>
@@ -92,12 +101,12 @@ const GameSmall = ({ gameData }: GameSmallProps) => {
               <p className='team--lastName'>{gameData.awayTeam.lastName}</p>
             </div>
           </div>
-          <p className='team--record'>{awayData}</p>
+          <p className={recordClass}>{awayData}</p>
         </div>
       </div>
       <div className='game--info'>
         <p>{gameData.league.toUpperCase()}</p>
-        <p>TV: {gameData.tvCoverage}</p>
+        {gameData.tvCoverage && <p>TV: {gameData.tvCoverage}</p>}
       </div>
     </div>
   );

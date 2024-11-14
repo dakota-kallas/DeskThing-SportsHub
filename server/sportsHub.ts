@@ -8,7 +8,10 @@ import {
   Team,
 } from '../src/stores/sportsHubStore';
 
-type League = 'NFL' | 'NBA';
+type League = 'NFL' | 'NBA' | 'MLS';
+
+const MLS = 'soccer.l.mls';
+const PremierLeague = 'soccer.l.fbgb';
 
 class SportsHubService {
   private sportsHubData: SportsHubData;
@@ -17,10 +20,11 @@ class SportsHubService {
   private deskthing: typeof DeskThing;
   private static instance: SportsHubService | null = null;
   private refreshInterval: number = 1;
-  private leaguesToShow: string[] = ['NFL', 'NBA'];
+  private leaguesToShow: string[] = ['NFL', 'NBA', 'MLS'];
   private favoriteLeague: string = 'NONE';
   private favoriteNFLTeams: string[] = [];
   private favoriteNBATeams: string[] = [];
+  private favoriteMLSTeams: string[] = [];
 
   constructor() {
     this.deskthing = DeskThing;
@@ -41,6 +45,7 @@ class SportsHubService {
     this.sportsHubData.allGames = [];
     this.sportsHubData.nflGames = [];
     this.sportsHubData.nbaGames = [];
+    this.sportsHubData.mlsGames = [];
 
     const now = new Date();
     const localYear = now.getFullYear();
@@ -57,6 +62,22 @@ class SportsHubService {
     };
 
     // Team: 'https://sports.yahoo.com/site/api/resource/sports.league.positionsteams;league=nba?lang=en-US&region=US';
+
+    // Soccer: https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=2024-11-23&v=2
+
+    if (this.leaguesToShow.includes('MLS')) {
+      const soccerUrl = `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=2024-11-23&v=2`;
+      let mlsGames = await this.fetchData(soccerUrl, 'MLS');
+
+      if (this.favoriteLeague !== 'NONE') {
+        mlsGames = mlsGames.sort(
+          (a, b) =>
+            (statusOrder[a.statusType] ?? 0) - (statusOrder[b.statusType] ?? 0)
+        );
+      }
+
+      this.sportsHubData.mlsGames = mlsGames;
+    }
 
     if (this.leaguesToShow.includes('NBA')) {
       const nbaUrl = `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=nba&date=${localDate}&v=2`;
@@ -92,6 +113,7 @@ class SportsHubService {
     this.sportsHubData.allGames = [
       ...this.sportsHubData.nflGames,
       ...this.sportsHubData.nbaGames,
+      ...this.sportsHubData.mlsGames,
     ];
 
     if (this.favoriteLeague !== 'NONE') {
@@ -102,73 +124,74 @@ class SportsHubService {
       });
     }
 
-    if (
-      this.leaguesToShow.includes('NBA') &&
-      this.favoriteNBATeams &&
-      this.favoriteNBATeams.length > 0
-    ) {
-      // Sort games based on whether a favorite team is involved
-      this.sportsHubData.allGames = this.sportsHubData.allGames.sort((a, b) => {
-        if (a.league !== 'NBA' && b.league !== 'NBA') {
-          return 0;
-        }
-        const aIsFavorite =
-          this.favoriteNBATeams.includes(a.homeTeam.abbreviation) ||
-          this.favoriteNBATeams.includes(a.awayTeam.abbreviation);
-        const bIsFavorite =
-          this.favoriteNBATeams.includes(b.homeTeam.abbreviation) ||
-          this.favoriteNBATeams.includes(b.awayTeam.abbreviation);
-        return aIsFavorite === bIsFavorite ? 0 : aIsFavorite ? -1 : 1;
-      });
-
-      // Sort games based on whether a favorite team is involved
-      this.sportsHubData.nbaGames = this.sportsHubData.nbaGames.sort((a, b) => {
-        const aIsFavorite =
-          this.favoriteNBATeams.includes(a.homeTeam.abbreviation) ||
-          this.favoriteNBATeams.includes(a.awayTeam.abbreviation);
-        const bIsFavorite =
-          this.favoriteNBATeams.includes(b.homeTeam.abbreviation) ||
-          this.favoriteNBATeams.includes(b.awayTeam.abbreviation);
-        return aIsFavorite === bIsFavorite ? 0 : aIsFavorite ? -1 : 1;
-      });
-    }
-
-    if (
-      this.leaguesToShow.includes('NFL') &&
-      this.favoriteNFLTeams &&
-      this.favoriteNFLTeams.length > 0
-    ) {
-      // Sort games based on whether a favorite team is involved
-      this.sportsHubData.allGames = this.sportsHubData.allGames.sort((a, b) => {
-        if (a.league !== 'NFL' && b.league !== 'NFL') {
-          return 0;
-        }
-        const aIsFavorite =
-          this.favoriteNFLTeams.includes(a.homeTeam.abbreviation) ||
-          this.favoriteNFLTeams.includes(a.awayTeam.abbreviation);
-        const bIsFavorite =
-          this.favoriteNFLTeams.includes(b.homeTeam.abbreviation) ||
-          this.favoriteNFLTeams.includes(b.awayTeam.abbreviation);
-        return aIsFavorite === bIsFavorite ? 0 : aIsFavorite ? -1 : 1;
-      });
-
-      // Sort games based on whether a favorite team is involved
-      this.sportsHubData.nflGames = this.sportsHubData.nflGames.sort((a, b) => {
-        const aIsFavorite =
-          this.favoriteNFLTeams.includes(a.homeTeam.abbreviation) ||
-          this.favoriteNFLTeams.includes(a.awayTeam.abbreviation);
-        const bIsFavorite =
-          this.favoriteNFLTeams.includes(b.homeTeam.abbreviation) ||
-          this.favoriteNFLTeams.includes(b.awayTeam.abbreviation);
-        return aIsFavorite === bIsFavorite ? 0 : aIsFavorite ? -1 : 1;
-      });
-    }
-
     if (this.favoriteLeague === 'NONE') {
       this.sportsHubData.allGames = this.sportsHubData.allGames.sort(
         (a, b) =>
           (statusOrder[a.statusType] ?? 0) - (statusOrder[b.statusType] ?? 0)
       );
+    }
+
+    this.sportsHubData.allGames = this.sortGamesByFavoriteTeam(
+      this.sportsHubData.allGames,
+      this.favoriteNBATeams,
+      'NBA'
+    );
+
+    this.sportsHubData.nbaGames = this.sortGamesByFavoriteTeam(
+      this.sportsHubData.nbaGames,
+      this.favoriteNBATeams,
+      'NBA'
+    );
+
+    this.sportsHubData.allGames = this.sortGamesByFavoriteTeam(
+      this.sportsHubData.allGames,
+      this.favoriteNFLTeams,
+      'NFL'
+    );
+
+    this.sportsHubData.nflGames = this.sortGamesByFavoriteTeam(
+      this.sportsHubData.nflGames,
+      this.favoriteNFLTeams,
+      'NFL'
+    );
+
+    this.sportsHubData.allGames = this.sortGamesByFavoriteTeam(
+      this.sportsHubData.allGames,
+      this.favoriteMLSTeams,
+      'MLS'
+    );
+
+    this.sportsHubData.mlsGames = this.sortGamesByFavoriteTeam(
+      this.sportsHubData.mlsGames,
+      this.favoriteMLSTeams,
+      'MLS'
+    );
+
+    // Sort again if the favorite league is set
+    switch (this.favoriteLeague) {
+      case 'NBA':
+        this.sportsHubData.allGames = this.sortGamesByFavoriteTeam(
+          this.sportsHubData.allGames,
+          this.favoriteNBATeams,
+          'NBA'
+        );
+        break;
+      case 'NFL':
+        this.sportsHubData.allGames = this.sortGamesByFavoriteTeam(
+          this.sportsHubData.allGames,
+          this.favoriteNFLTeams,
+          'NFL'
+        );
+        break;
+      case 'MLS':
+        this.sportsHubData.allGames = this.sortGamesByFavoriteTeam(
+          this.sportsHubData.allGames,
+          this.favoriteMLSTeams,
+          'MLS'
+        );
+        break;
+      default:
+        break;
     }
 
     const timeString = now.toLocaleTimeString([], {
@@ -184,6 +207,34 @@ class SportsHubService {
       type: 'sportshub_data',
       payload: this.sportsHubData,
     });
+  }
+
+  private sortGamesByFavoriteTeam(
+    games: Game[],
+    favoriteTeams: string[],
+    league: League
+  ) {
+    let sortedGames = games;
+    if (
+      this.leaguesToShow.includes(league) &&
+      favoriteTeams &&
+      favoriteTeams.length > 0
+    ) {
+      // Sort games based on whether a favorite team is involved
+      sortedGames = games.sort((a, b) => {
+        if (a.league !== league && b.league !== league) {
+          return 0;
+        }
+        const aIsFavorite =
+          favoriteTeams.includes(a.homeTeam.abbreviation) ||
+          favoriteTeams.includes(a.awayTeam.abbreviation);
+        const bIsFavorite =
+          favoriteTeams.includes(b.homeTeam.abbreviation) ||
+          favoriteTeams.includes(b.awayTeam.abbreviation);
+        return aIsFavorite === bIsFavorite ? 0 : aIsFavorite ? -1 : 1;
+      });
+    }
+    return sortedGames;
   }
 
   // Function to fetch and parse data from the API
@@ -203,7 +254,6 @@ class SportsHubService {
 
       if (!data.service.scoreboard.games) {
         return [];
-        throw new Error('No Games found');
       }
 
       if (!data.service.scoreboard.teamrecord) {
@@ -245,8 +295,15 @@ class SportsHubService {
       );
 
       // Parse games
-      let games: Game[] = Object.values(data.service.scoreboard.games).map(
-        (game: any) => {
+      let games: Game[] = Object.values(data.service.scoreboard.games)
+        .filter((game: any) => {
+          if (league !== 'MLS') {
+            return true;
+          }
+
+          return game.subleague === MLS;
+        })
+        .map((game: any) => {
           const utcDate = new Date(game.start_time);
 
           const options = {
@@ -281,8 +338,7 @@ class SportsHubService {
             })),
             week: game.week_number,
           };
-        }
-      );
+        });
 
       return games;
     } catch (error) {
@@ -321,6 +377,7 @@ class SportsHubService {
       this.leaguesToShow = (data.settings.leaguesToShow.value as string[]) || [
         'NFL',
         'NBA',
+        'MLS',
       ];
       this.favoriteLeague =
         (data.settings.favoriteLeague.value as string) || 'NONE';
@@ -328,6 +385,9 @@ class SportsHubService {
         (data.settings.favoriteNBATeams.value as string[]) || [];
       this.favoriteNFLTeams =
         (data.settings.favoriteNFLTeams.value as string[]) || [];
+      this.favoriteMLSTeams =
+        (data.settings.favoriteMLSTeams.value as string[]) || [];
+
       this.updateSportsHub();
     } catch (error) {
       this.deskthing.sendLog('Error updating Sports Hub data: ' + error);

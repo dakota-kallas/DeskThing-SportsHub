@@ -15,6 +15,10 @@ export type SportsHubData = {
    */
   nflGames: Game[];
   /**
+   * MLS Game list
+   */
+  mlsGames: Game[];
+  /**
    * Last Refreshed Time
    */
   lastUpdated?: string;
@@ -23,6 +27,7 @@ export type SportsHubData = {
 export enum League {
   NBA = 'NBA',
   NFL = 'NFL',
+  MLS = 'MLS',
 }
 
 export type Team = {

@@ -68,6 +68,12 @@
 .team--firstName {
   font-weight: bold;
   font-size: 16px;
+  max-width: 120px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .team--lastName {
@@ -78,6 +84,11 @@
 .team--record {
   font-weight: bold;
   font-size: 16px;
+  margin-left: 4px;
+}
+
+.team--smallText {
+  font-size: 14px;
 }
 
 .team--logo {

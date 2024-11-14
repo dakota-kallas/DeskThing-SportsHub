@@ -65,16 +65,18 @@ const setupSettings = async () => {
       { label: 'None', value: 'NONE' },
       { label: 'NFL', value: 'NFL' },
       { label: 'NBA', value: 'NBA' },
+      { label: 'MLS', value: 'MLS' },
     ],
   } as SettingsSelect;
 
   const leaguesToShowSetting = {
     label: 'Leagues To Show',
-    value: ['NFL', 'NBA'],
+    value: ['NFL', 'NBA', 'MLS'],
     type: 'multiselect',
     options: [
       { label: 'NFL', value: 'NFL' },
       { label: 'NBA', value: 'NBA' },
+      { label: 'MLS', value: 'MLS' },
     ],
   } as SettingsMultiSelect;
 
@@ -155,12 +157,50 @@ const setupSettings = async () => {
     ],
   } as SettingsMultiSelect;
 
+  const favoriteMLSTeamsSetting = {
+    label: 'Favorite MLS Teams',
+    value: [],
+    type: 'multiselect',
+    options: [
+      { label: 'Atlanta United', value: 'ATL' },
+      { label: 'Austin FC', value: 'ATX' },
+      { label: 'CF Montreal', value: 'MTL' },
+      { label: 'Charlotte FC', value: 'CLT' },
+      { label: 'Chicago Fire', value: 'CHI' },
+      { label: 'Colorado Rapids', value: 'COL' },
+      { label: 'Columbus Crew SC', value: 'CLB' },
+      { label: 'D.C. United', value: 'DC' },
+      { label: 'FC Cincinnati', value: 'CIN' },
+      { label: 'FC Dallas', value: 'DAL' },
+      { label: 'Houston Dynamo', value: 'HOU' },
+      { label: 'Inter Miami', value: 'MIA' },
+      { label: 'Los Angeles FC', value: 'LAN' },
+      { label: 'Los Angeles Galaxy', value: 'LA' },
+      { label: 'Minnesota United FC', value: 'MIN' },
+      { label: 'Nashville SC', value: 'NSH' },
+      { label: 'New England Revolution', value: 'NE' },
+      { label: 'New York City', value: 'NYC' },
+      { label: 'New York Red Bulls', value: 'NYR' },
+      { label: 'Orlando City', value: 'ORL' },
+      { label: 'Philadelphia Union', value: 'PHI' },
+      { label: 'Portland Timbers', value: 'POR' },
+      { label: 'Real Salt Lake', value: 'RSL' },
+      { label: 'San Jose Earthquakes', value: 'SJ' },
+      { label: 'Seattle Sounders', value: 'SEA' },
+      { label: 'Sporting Kansas City', value: 'SKC' },
+      { label: 'St Louis City SC', value: 'STL' },
+      { label: 'Toronto FC', value: 'TOR' },
+      { label: 'Vancouver Whitecaps', value: 'VAN' },
+    ],
+  } as SettingsMultiSelect;
+
   DeskThing.addSettings({
     refreshInterval: refreshIntervalSetting,
     favoriteLeague: favoriteLeagueSetting,
     leaguesToShow: leaguesToShowSetting,
     favoriteNBATeams: favoriteNBATeamsSetting,
     favoriteNFLTeams: favoriteNFLTeamsSetting,
+    favoriteMLSTeams: favoriteMLSTeamsSetting,
   });
 };
 

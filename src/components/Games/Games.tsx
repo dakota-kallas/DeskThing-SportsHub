@@ -32,6 +32,15 @@ const Games = ({ sportsHubData }: GamesProps) => {
     };
   }, [contentContainerRef.current]);
 
+  // sportsHubData?.mlsGames.forEach((element) => {
+  //   console.log(
+  //     `${element.homeTeam.firstName} ${element.homeTeam.abbreviation}`
+  //   );
+  //   console.log(
+  //     `${element.awayTeam.firstName} ${element.awayTeam.abbreviation}`
+  //   );
+  // });
+
   return (
     <div className='contentContainer' ref={contentContainerRef}>
       <div className='gamesContainer gamesContainer--small'>

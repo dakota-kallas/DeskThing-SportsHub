@@ -52,7 +52,7 @@ const setupSettings = async () => {
     label: 'Refresh Interval (minutes)',
     description: 'The amount of minutes between each refresh.',
     type: 'number',
-    value: 5,
+    value: 1,
     max: 60,
     min: 1,
   } as SettingsNumber;

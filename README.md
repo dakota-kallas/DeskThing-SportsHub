@@ -2,15 +2,29 @@
 
 The Sports Hub app for DeskThing delivers instant, at-a-glance access to live sports updates, keeping you informed in real time.
 
-![image]()
-
-![image]()
+![SportsHub](https://github.com/user-attachments/assets/dc20ef98-05e3-4b3b-b6bd-45f079fd9d16)
 
 ## Features
 
 - **Matchup Previews**: Preview today's upcoming matchups!
 - **Real-Time Game Updates**: Fetches up-to-date information about ongoing matches / games
 - **Customizable Display**: Customize what you want to see and how you want to see it!
+
+## Supported Leagues
+
+- <img src="https://github.com/user-attachments/assets/d1a3b2a7-1192-4b9e-8fb6-afdb9a0c7223" height="30" /> NFL
+- <img src="https://github.com/user-attachments/assets/82fccb6d-1864-4f0d-bbf9-6bed407fe8c5" height="30" /> NBA
+- <img src="https://github.com/user-attachments/assets/ecc7785f-9a30-4a17-a1d4-05caeb361519" height="30" /> MLS
+
+### Future Support
+
+- MLB
+- NHL
+- NCAAF (College Football)
+- Premier League
+- Champions League
+- LaLiga
+- Any other suggestions!
 
 ## Installation
 
@@ -59,5 +73,4 @@ Create a pull request and described the added / modified functionality.
 
 ## Additional Screenshots
 
-<img src="" height="400" />
-<img src="" height="400" />
+<img src="https://github.com/user-attachments/assets/3616ad01-20b0-4aec-8f84-62d972ce6f0f" height="400" />

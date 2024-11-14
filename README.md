@@ -1,2 +1,63 @@
 # DeskThing-SportsHub
- 
+
+The Sports Hub app for DeskThing delivers instant, at-a-glance access to live sports updates, keeping you informed in real time.
+
+![image]()
+
+![image]()
+
+## Features
+
+- **Matchup Previews**: Preview today's upcoming matchups!
+- **Real-Time Game Updates**: Fetches up-to-date information about ongoing matches / games
+- **Customizable Display**: Customize what you want to see and how you want to see it!
+
+## Installation
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+- [DeskThing](https://deskthing.app/)
+
+### Setup
+
+Current as of DeskThing v0.9.2
+
+1. Download the latest release build
+2. Navigate to the `Downloads > App` tab and click on `Upload App`
+   - <img src="https://github.com/user-attachments/assets/7da9db21-64c5-4c55-898a-de97b9e6f1c1" height="300" />
+3. Select the `build.zip` file that was downloaded
+4. Navigate to the `Settings` of `Sports Hub`
+5. Enter your desired configuration
+   - Any teams you'd like to favorite
+   - Leagues you'd like to see
+6. Save the Settings
+7. Reset your client state by navigating to the `Menu` of you **DeskThing** on your client (Car Thing)
+   - The far-right button on your **Spotify Car Thing** (or press the `M` key on other clients)
+
+## Usage
+
+1. Upon starting the loading that app onto your DeskThing, you should get a view of all things sports!
+   - Navigate to `Settings` to enter your desired configuration.
+2. The app will fetch the data for the selected stock and display:
+   - Matchup Previews
+   - Live Scores
+   - Real-Time Game Status
+3. The data will be automatically updated based on your configuration.
+
+## Troubleshooting
+
+### Data not refreshing / loading
+
+1. Check you've properly configured your `Refresh Interval` in the `Settings` page for **Sports Hub**
+2. If you that doens't work, refer to `Step 7` of the **Setup**
+
+## Contributing
+
+Create a pull request and described the added / modified functionality.
+
+## Additional Screenshots
+
+<img src="" height="400" />
+<img src="" height="400" />

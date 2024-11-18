@@ -3,7 +3,6 @@ import { DataInterface } from 'deskthing-server';
 import {
   Game,
   GameStatusType,
-  Player,
   SportsHubData,
   Team,
 } from '../src/stores/sportsHubStore';
@@ -40,14 +39,102 @@ class SportsHubService {
   }
 
   private async updateSportsHub() {
-    this.deskthing.sendLog(`Fetching Sports Hub data from API.`);
-    this.sportsHubData = {} as SportsHubData;
-    this.sportsHubData.allGames = [];
-    this.sportsHubData.nflGames = [];
-    this.sportsHubData.nbaGames = [];
-    this.sportsHubData.mlsGames = [];
-
+    this.deskthing.sendLog(`Fetching Sports Hub data...`);
     const now = new Date();
+
+    let checkNBA = this.leaguesToShow.includes('NBA');
+    let checkNFL = this.leaguesToShow.includes('NFL');
+    let checkMLS = this.leaguesToShow.includes('MLS');
+
+    // Don't check for games in the specified set if the data already exists and was updated today and there are no live games
+    if (
+      this.sportsHubData &&
+      this.lastUpdateTime?.getDate() === now.getDate()
+    ) {
+      this.deskthing.sendLog(
+        `Sports Hub data already exists. Checking for live games...`
+      );
+
+      // Check NBA Games
+      if (
+        checkNBA &&
+        (!this.sportsHubData.nbaGames ||
+          this.hasLiveGame(this.sportsHubData.nbaGames))
+      ) {
+        if (!this.sportsHubData.nbaGames) {
+          this.deskthing.sendLog(
+            `No NBA games have been retrieved. Going to fetch NBA games.`
+          );
+          this.sportsHubData.nbaGames = [];
+        } else {
+          this.deskthing.sendLog(
+            `At least one NBA game is Live. Going to fetch NBA games.`
+          );
+        }
+      } else {
+        this.deskthing.sendLog(
+          `No NBA games are live. Not fetching NBA games.`
+        );
+        checkNBA = false;
+      }
+
+      // Check NFL Games
+      if (
+        checkNFL &&
+        (!this.sportsHubData.nflGames ||
+          this.hasLiveGame(this.sportsHubData.nflGames))
+      ) {
+        if (!this.sportsHubData.nflGames) {
+          this.deskthing.sendLog(
+            `No NFL games have been retrieved. Going to fetch NFL games.`
+          );
+          this.sportsHubData.nflGames = [];
+        } else {
+          this.deskthing.sendLog(
+            `At least one NFL game is Live. Going to fetch NFL games.`
+          );
+        }
+      } else {
+        this.deskthing.sendLog(
+          `No NFL games are live. Not fetching NFL games.`
+        );
+        checkNFL = false;
+      }
+
+      // Check MLS Games
+      if (
+        checkMLS &&
+        (!this.sportsHubData.mlsGames ||
+          this.hasLiveGame(this.sportsHubData.mlsGames))
+      ) {
+        if (!this.sportsHubData.mlsGames) {
+          this.deskthing.sendLog(
+            `No MLS games have been retrieved. Going to fetch MLS games.`
+          );
+          this.sportsHubData.mlsGames = [];
+        } else {
+          this.deskthing.sendLog(
+            `At least one MLS game is Live. Going to fetch MLS games.`
+          );
+        }
+      } else {
+        this.deskthing.sendLog(
+          `No MLS games are live. Not fetching MLS games.`
+        );
+        checkMLS = false;
+      }
+      this.sportsHubData.allGames = [];
+    } else {
+      this.deskthing.sendLog(
+        `No existing data found OR existing data is not from today. Fetching all games...`
+      );
+      this.sportsHubData = {} as SportsHubData;
+      this.sportsHubData.allGames = [];
+      this.sportsHubData.nflGames = checkNFL ? [] : undefined;
+      this.sportsHubData.nbaGames = checkMLS ? [] : undefined;
+      this.sportsHubData.mlsGames = checkNBA ? [] : undefined;
+    }
+
     const localYear = now.getFullYear();
     const localMonth = String(now.getMonth() + 1).padStart(2, '0');
     const localDay = String(now.getDate()).padStart(2, '0');
@@ -63,7 +150,8 @@ class SportsHubService {
 
     // Team: 'https://sports.yahoo.com/site/api/resource/sports.league.positionsteams;league=nba?lang=en-US&region=US';
 
-    if (this.leaguesToShow.includes('MLS')) {
+    if (checkMLS) {
+      this.deskthing.sendLog(`Fetching MLS games...`);
       const soccerUrl = `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=${localDate}&v=2`;
       let mlsGames = await this.fetchData(soccerUrl, 'MLS');
 
@@ -77,7 +165,8 @@ class SportsHubService {
       this.sportsHubData.mlsGames = mlsGames;
     }
 
-    if (this.leaguesToShow.includes('NBA')) {
+    if (checkNBA) {
+      this.deskthing.sendLog(`Fetching NBA games...`);
       const nbaUrl = `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=nba&date=${localDate}&v=2`;
       let nbaGames = await this.fetchData(nbaUrl, 'NBA');
 
@@ -91,9 +180,9 @@ class SportsHubService {
       this.sportsHubData.nbaGames = nbaGames;
     }
 
-    if (this.leaguesToShow.includes('NFL')) {
+    if (checkNFL) {
+      this.deskthing.sendLog(`Fetching NFL games...`);
       const nflUrl = encodeURI(
-        // `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=nfl&season=current&sched_states=2&v=2&date=${localDate}`
         `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=nfl&season=current&sched_states=2&v=2&date=${localDate}`
       );
       let nflGames = await this.fetchData(nflUrl, 'NFL');
@@ -109,9 +198,9 @@ class SportsHubService {
     }
 
     this.sportsHubData.allGames = [
-      ...this.sportsHubData.nflGames,
-      ...this.sportsHubData.nbaGames,
-      ...this.sportsHubData.mlsGames,
+      ...(this.sportsHubData.nflGames ?? []),
+      ...(this.sportsHubData.nbaGames ?? []),
+      ...(this.sportsHubData.mlsGames ?? []),
     ];
 
     if (this.favoriteLeague !== 'NONE') {
@@ -129,41 +218,47 @@ class SportsHubService {
       );
     }
 
-    this.sportsHubData.allGames = this.sortGamesByFavoriteTeam(
-      this.sportsHubData.allGames,
-      this.favoriteNBATeams,
-      'NBA'
-    );
+    if (this.sportsHubData.nbaGames) {
+      this.sportsHubData.allGames = this.sortGamesByFavoriteTeam(
+        this.sportsHubData.allGames,
+        this.favoriteNBATeams,
+        'NBA'
+      );
 
-    this.sportsHubData.nbaGames = this.sortGamesByFavoriteTeam(
-      this.sportsHubData.nbaGames,
-      this.favoriteNBATeams,
-      'NBA'
-    );
+      this.sportsHubData.nbaGames = this.sortGamesByFavoriteTeam(
+        this.sportsHubData.nbaGames,
+        this.favoriteNBATeams,
+        'NBA'
+      );
+    }
 
-    this.sportsHubData.allGames = this.sortGamesByFavoriteTeam(
-      this.sportsHubData.allGames,
-      this.favoriteNFLTeams,
-      'NFL'
-    );
+    if (this.sportsHubData.nflGames) {
+      this.sportsHubData.allGames = this.sortGamesByFavoriteTeam(
+        this.sportsHubData.allGames,
+        this.favoriteNFLTeams,
+        'NFL'
+      );
 
-    this.sportsHubData.nflGames = this.sortGamesByFavoriteTeam(
-      this.sportsHubData.nflGames,
-      this.favoriteNFLTeams,
-      'NFL'
-    );
+      this.sportsHubData.nflGames = this.sortGamesByFavoriteTeam(
+        this.sportsHubData.nflGames,
+        this.favoriteNFLTeams,
+        'NFL'
+      );
+    }
 
-    this.sportsHubData.allGames = this.sortGamesByFavoriteTeam(
-      this.sportsHubData.allGames,
-      this.favoriteMLSTeams,
-      'MLS'
-    );
+    if (this.sportsHubData.mlsGames) {
+      this.sportsHubData.allGames = this.sortGamesByFavoriteTeam(
+        this.sportsHubData.allGames,
+        this.favoriteMLSTeams,
+        'MLS'
+      );
 
-    this.sportsHubData.mlsGames = this.sortGamesByFavoriteTeam(
-      this.sportsHubData.mlsGames,
-      this.favoriteMLSTeams,
-      'MLS'
-    );
+      this.sportsHubData.mlsGames = this.sortGamesByFavoriteTeam(
+        this.sportsHubData.mlsGames,
+        this.favoriteMLSTeams,
+        'MLS'
+      );
+    }
 
     // Sort again if the favorite league is set
     switch (this.favoriteLeague) {
@@ -233,6 +328,29 @@ class SportsHubService {
       });
     }
     return sortedGames;
+  }
+
+  /**
+   * Check if there is a live game in the list of games
+   * @param games
+   * @returns
+   */
+  private hasLiveGame(games: Game[]) {
+    return games.some((game) => this.isGameLive(game));
+  }
+
+  private isGameLive(game: Game): boolean {
+    if (game.statusType === 'in_progress') {
+      return true;
+    }
+
+    if (game.statusType === 'pregame') {
+      const gameTime = game.startUtc.getTime();
+      const currentTime = new Date().getTime();
+      return gameTime < currentTime;
+    }
+
+    return false;
   }
 
   // Function to fetch and parse data from the API
@@ -316,6 +434,7 @@ class SportsHubService {
           return {
             gameId: game.gameid,
             league: league,
+            startUtc: utcDate,
             startTime: localTime,
             homeTeam: teamsMap[game.home_team_id],
             awayTeam: teamsMap[game.away_team_id],
@@ -340,10 +459,21 @@ class SportsHubService {
 
       return games;
     } catch (error) {
+      console.error('Error fetching or parsing data:', error);
+      if (
+        this.lastUpdateTime?.getDate() === new Date().getDate() &&
+        this.sportsHubData[`${league.toLowerCase()}Games`]
+      ) {
+        this.deskthing.sendError(
+          `Error fetching Sports Hub data (${league.toUpperCase()}). Using previous data: ${
+            error?.message
+          }`
+        );
+        return this.sportsHubData[`${league.toLowerCase()}Games`];
+      }
       this.deskthing.sendError(
         `Error fetching Sports Hub (${league.toUpperCase()}): ${error?.message}`
       );
-      console.error('Error fetching or parsing data:', error);
       return []; // Return an empty array in case of error
     }
   }
@@ -369,7 +499,7 @@ class SportsHubService {
       return;
     }
     try {
-      this.deskthing.sendLog('Updating settings');
+      this.deskthing.sendLog('Updating settings...');
       this.refreshInterval =
         (data.settings.refreshInterval.value as number) || 1;
       this.leaguesToShow = (data.settings.leaguesToShow.value as string[]) || [
@@ -397,7 +527,7 @@ class SportsHubService {
   }
 
   public async getSportsHub(): Promise<SportsHubData> {
-    // If it's been more than an hour since the last update, update the sports data
+    // If it's been more than the set refresh interval since the last update, update the sports data
     if (
       !this.lastUpdateTime ||
       new Date().getTime() - this.lastUpdateTime.getTime() > 15 * 60 * 1000

@@ -9,15 +9,15 @@ export type SportsHubData = {
   /**
    * NBA Game list
    */
-  nbaGames: Game[];
+  nbaGames?: Game[];
   /**
    * NBA Game list
    */
-  nflGames: Game[];
+  nflGames?: Game[];
   /**
    * MLS Game list
    */
-  mlsGames: Game[];
+  mlsGames?: Game[];
   /**
    * Last Refreshed Time
    */
@@ -62,6 +62,7 @@ export type GameStatusType = 'pregame' | 'in_progress' | 'final' | 'postponed';
 export type Game = {
   gameId: string;
   league: string;
+  startUtc: Date;
   startTime: string;
   homeTeam: Team;
   awayTeam: Team;

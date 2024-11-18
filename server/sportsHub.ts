@@ -527,7 +527,7 @@ class SportsHubService {
   }
 
   public async getSportsHub(): Promise<SportsHubData> {
-    // If it's been more than an hour since the last update, update the sports data
+    // If it's been more than the set refresh interval since the last update, update the sports data
     if (
       !this.lastUpdateTime ||
       new Date().getTime() - this.lastUpdateTime.getTime() > 15 * 60 * 1000

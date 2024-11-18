@@ -2,6 +2,7 @@ import { Game as GameData, League } from '../../../stores/sportsHubStore';
 import nbaLogo from '../../../assets/logo/nba.png';
 import nflLogo from '../../../assets/logo/nfl.png';
 import mlsLogo from '../../../assets/logo/mls.png';
+import ncaafLogo from '../../../assets/logo/ncaaf.png';
 import './gamesmall.css';
 
 interface GameSmallProps {
@@ -17,6 +18,9 @@ const GameSmall = ({ gameData }: GameSmallProps) => {
       break;
     case League.NFL:
       logo = nflLogo;
+      break;
+    case League.NCAAF:
+      logo = ncaafLogo;
       break;
     case League.MLS:
       logo = mlsLogo;

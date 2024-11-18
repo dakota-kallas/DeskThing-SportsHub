@@ -36,12 +36,12 @@ Make sure you have the following installed:
 
 ### Setup
 
-Current as of DeskThing v0.9.2
+Current as of DeskThing v0.9.3
 
 1. Download the latest release build
 2. Navigate to the `Downloads > App` tab and click on `Upload App`
    - <img src="https://github.com/user-attachments/assets/7da9db21-64c5-4c55-898a-de97b9e6f1c1" height="300" />
-3. Select the `build.zip` file that was downloaded
+3. Select the `sportshub-app-v{version number}.zip` file that was downloaded
 4. Navigate to the `Settings` of `Sports Hub`
 5. Enter your desired configuration
    - Any teams you'd like to favorite

@@ -15,12 +15,12 @@ The Sports Hub app for DeskThing delivers instant, at-a-glance access to live sp
 - <img src="https://github.com/user-attachments/assets/d1a3b2a7-1192-4b9e-8fb6-afdb9a0c7223" height="30" /> NFL
 - <img src="https://github.com/user-attachments/assets/82fccb6d-1864-4f0d-bbf9-6bed407fe8c5" height="30" /> NBA
 - <img src="https://github.com/user-attachments/assets/ecc7785f-9a30-4a17-a1d4-05caeb361519" height="30" /> MLS
+- <img src="https://github.com/user-attachments/assets/2f16c5b3-449e-4ad6-aeaa-ca5eb90a719b" height="30" /> NCAAF (College Football)
 
 ### Future Support
 
 - MLB
 - NHL
-- NCAAF (College Football)
 - Premier League
 - Champions League
 - LaLiga
@@ -69,7 +69,9 @@ Current as of DeskThing v0.9.3
 ### Data not refreshing / loading
 
 1. Check you've properly configured your `Refresh Interval` in the `Settings` page for **Sports Hub**
-2. If you that doens't work, refer to `Step 7` of the **Setup**
+2. If you that doesn't work, refer to `Step 7` of the **Setup**
+3. If you are still experiencing issues, try reducing your Refresh Interval (in `Settings`).
+   - You may be hitting an API limit. You may need to wait up to 24 hours to notice a difference.
 
 ## Contributing
 

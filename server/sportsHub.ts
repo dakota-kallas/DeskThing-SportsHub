@@ -7,7 +7,7 @@ import {
   Team,
 } from '../src/stores/sportsHubStore';
 
-type League = 'NFL' | 'NBA' | 'MLS';
+type League = 'NFL' | 'NBA' | 'MLS' | 'NCAAF';
 
 const MLS = 'soccer.l.mls';
 const PremierLeague = 'soccer.l.fbgb';
@@ -19,9 +19,10 @@ class SportsHubService {
   private deskthing: typeof DeskThing;
   private static instance: SportsHubService | null = null;
   private refreshInterval: number = 1;
-  private leaguesToShow: string[] = ['NFL', 'NBA', 'MLS'];
+  private leaguesToShow: string[] = [];
   private favoriteLeague: string = 'NONE';
   private favoriteNFLTeams: string[] = [];
+  private selectedNCAAFTeams: string[] = [];
   private favoriteNBATeams: string[] = [];
   private favoriteMLSTeams: string[] = [];
 
@@ -42,9 +43,25 @@ class SportsHubService {
     this.deskthing.sendLog(`Fetching Sports Hub data...`);
     const now = new Date();
 
+    // Main logic
     let checkNBA = this.leaguesToShow.includes('NBA');
     let checkNFL = this.leaguesToShow.includes('NFL');
     let checkMLS = this.leaguesToShow.includes('MLS');
+    let checkNCAAF = this.leaguesToShow.includes('NCAAF');
+
+    // If the user has deselected a league, remove the data
+    if (!checkMLS && this.sportsHubData?.mlsGames) {
+      this.sportsHubData.mlsGames = undefined;
+    }
+    if (!checkNBA && this.sportsHubData?.nbaGames) {
+      this.sportsHubData.nbaGames = undefined;
+    }
+    if (!checkNFL && this.sportsHubData?.nflGames) {
+      this.sportsHubData.nflGames = undefined;
+    }
+    if (!checkNCAAF && this.sportsHubData?.ncaafGames) {
+      this.sportsHubData.ncaafGames = undefined;
+    }
 
     // Don't check for games in the specified set if the data already exists and was updated today and there are no live games
     if (
@@ -52,88 +69,27 @@ class SportsHubService {
       this.lastUpdateTime?.getDate() === now.getDate()
     ) {
       this.deskthing.sendLog(
-        `Sports Hub data already exists. Checking for live games...`
+        'Sports Hub data already exists. Checking for live games...'
       );
 
-      // Check NBA Games
-      if (
-        checkNBA &&
-        (!this.sportsHubData.nbaGames ||
-          this.hasLiveGame(this.sportsHubData.nbaGames))
-      ) {
-        if (!this.sportsHubData.nbaGames) {
-          this.deskthing.sendLog(
-            `No NBA games have been retrieved. Going to fetch NBA games.`
-          );
-          this.sportsHubData.nbaGames = [];
-        } else {
-          this.deskthing.sendLog(
-            `At least one NBA game is Live. Going to fetch NBA games.`
-          );
-        }
-      } else {
-        this.deskthing.sendLog(
-          `No NBA games are live. Not fetching NBA games.`
-        );
-        checkNBA = false;
-      }
-
-      // Check NFL Games
-      if (
-        checkNFL &&
-        (!this.sportsHubData.nflGames ||
-          this.hasLiveGame(this.sportsHubData.nflGames))
-      ) {
-        if (!this.sportsHubData.nflGames) {
-          this.deskthing.sendLog(
-            `No NFL games have been retrieved. Going to fetch NFL games.`
-          );
-          this.sportsHubData.nflGames = [];
-        } else {
-          this.deskthing.sendLog(
-            `At least one NFL game is Live. Going to fetch NFL games.`
-          );
-        }
-      } else {
-        this.deskthing.sendLog(
-          `No NFL games are live. Not fetching NFL games.`
-        );
-        checkNFL = false;
-      }
-
-      // Check MLS Games
-      if (
-        checkMLS &&
-        (!this.sportsHubData.mlsGames ||
-          this.hasLiveGame(this.sportsHubData.mlsGames))
-      ) {
-        if (!this.sportsHubData.mlsGames) {
-          this.deskthing.sendLog(
-            `No MLS games have been retrieved. Going to fetch MLS games.`
-          );
-          this.sportsHubData.mlsGames = [];
-        } else {
-          this.deskthing.sendLog(
-            `At least one MLS game is Live. Going to fetch MLS games.`
-          );
-        }
-      } else {
-        this.deskthing.sendLog(
-          `No MLS games are live. Not fetching MLS games.`
-        );
-        checkMLS = false;
-      }
-      this.sportsHubData.allGames = [];
+      // Use the helper method for each league
+      checkNBA = this.checkGames('NBA', 'nbaGames', checkNBA);
+      checkNFL = this.checkGames('NFL', 'nflGames', checkNFL);
+      checkMLS = this.checkGames('MLS', 'mlsGames', checkMLS);
+      checkNCAAF = this.checkGames('NCAA Football', 'ncaafGames', checkNCAAF);
     } else {
       this.deskthing.sendLog(
         `No existing data found OR existing data is not from today. Fetching all games...`
       );
       this.sportsHubData = {} as SportsHubData;
-      this.sportsHubData.allGames = [];
       this.sportsHubData.nflGames = checkNFL ? [] : undefined;
       this.sportsHubData.nbaGames = checkMLS ? [] : undefined;
       this.sportsHubData.mlsGames = checkNBA ? [] : undefined;
+      this.sportsHubData.ncaafGames = checkNCAAF ? [] : undefined;
     }
+
+    // No matter the case, the allGames array should be reset
+    this.sportsHubData.allGames = [];
 
     const localYear = now.getFullYear();
     const localMonth = String(now.getMonth() + 1).padStart(2, '0');
@@ -197,10 +153,28 @@ class SportsHubService {
       this.sportsHubData.nflGames = nflGames;
     }
 
+    if (checkNCAAF) {
+      this.deskthing.sendLog(`Fetching NCAA Football games...`);
+      const ncaafUrl = encodeURI(
+        `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=ncaaf&date=${localDate}&v=2`
+      );
+      let ncaafGames = await this.fetchData(ncaafUrl, 'NCAAF');
+
+      if (this.favoriteLeague !== 'NONE') {
+        ncaafGames = ncaafGames.sort(
+          (a, b) =>
+            (statusOrder[a.statusType] ?? 0) - (statusOrder[b.statusType] ?? 0)
+        );
+      }
+
+      this.sportsHubData.ncaafGames = ncaafGames;
+    }
+
     this.sportsHubData.allGames = [
       ...(this.sportsHubData.nflGames ?? []),
       ...(this.sportsHubData.nbaGames ?? []),
       ...(this.sportsHubData.mlsGames ?? []),
+      ...(this.sportsHubData.ncaafGames ?? []),
     ];
 
     if (this.favoriteLeague !== 'NONE') {
@@ -246,6 +220,8 @@ class SportsHubService {
       );
     }
 
+    // We don't need to sort favorite teams for NCAA Football since we're already filtering by favorite teams
+
     if (this.sportsHubData.mlsGames) {
       this.sportsHubData.allGames = this.sortGamesByFavoriteTeam(
         this.sportsHubData.allGames,
@@ -276,6 +252,13 @@ class SportsHubService {
           'NFL'
         );
         break;
+      case 'NCAAF':
+        this.sportsHubData.allGames = this.sortGamesByFavoriteTeam(
+          this.sportsHubData.allGames,
+          this.selectedNCAAFTeams,
+          'NCAAF'
+        );
+        break;
       case 'MLS':
         this.sportsHubData.allGames = this.sortGamesByFavoriteTeam(
           this.sportsHubData.allGames,
@@ -300,6 +283,47 @@ class SportsHubService {
       type: 'sportshub_data',
       payload: this.sportsHubData,
     });
+  }
+
+  /**
+   * Helper method to check if the league games need to be fetched
+   * @param leagueDisplayName Display name used for logging
+   * @param gamesKey
+   * @param checkFlag
+   * @returns
+   */
+  private checkGames(
+    leagueDisplayName: string,
+    gamesKey: string,
+    checkFlag: boolean
+  ): boolean {
+    if (checkFlag) {
+      if (
+        !this.sportsHubData[gamesKey] ||
+        this.hasLiveGame(this.sportsHubData[gamesKey])
+      ) {
+        if (!this.sportsHubData[gamesKey]) {
+          this.deskthing.sendLog(
+            `No ${leagueDisplayName} games have been retrieved. Going to fetch games.`
+          );
+          this.sportsHubData[gamesKey] = [];
+        } else {
+          this.deskthing.sendLog(
+            `At least one ${leagueDisplayName} game is live. Going to fetch games.`
+          );
+        }
+      } else {
+        this.deskthing.sendLog(
+          `No ${leagueDisplayName} games are live. Not fetching games.`
+        );
+        return false; // Set the check flag to false if no live games
+      }
+    } else {
+      this.deskthing.sendLog(
+        `${leagueDisplayName} is not set as a shown league. Not fetching games.`
+      );
+    }
+    return checkFlag; // Return the updated check flag
   }
 
   private sortGamesByFavoriteTeam(
@@ -413,11 +437,21 @@ class SportsHubService {
       // Parse games
       let games: Game[] = Object.values(data.service.scoreboard.games)
         .filter((game: any) => {
-          if (league !== 'MLS') {
-            return true;
+          // Only include soccer games where the subleague is MLS
+          if (league === 'MLS') {
+            return game.subleague === MLS;
+          }
+          // Only include NCAA Football games where one of the user's selected teams is playing
+          else if (league === 'NCAAF') {
+            const homeTeam = teamsMap[game.home_team_id];
+            const awayTeam = teamsMap[game.away_team_id];
+            return (
+              this.selectedNCAAFTeams.includes(homeTeam.abbreviation) ||
+              this.selectedNCAAFTeams.includes(awayTeam.abbreviation)
+            );
           }
 
-          return game.subleague === MLS;
+          return true;
         })
         .map((game: any) => {
           const utcDate = new Date(game.start_time);
@@ -502,17 +536,16 @@ class SportsHubService {
       this.deskthing.sendLog('Updating settings...');
       this.refreshInterval =
         (data.settings.refreshInterval.value as number) || 1;
-      this.leaguesToShow = (data.settings.leaguesToShow.value as string[]) || [
-        'NFL',
-        'NBA',
-        'MLS',
-      ];
+      this.leaguesToShow =
+        (data.settings.leaguesToShow.value as string[]) || [];
       this.favoriteLeague =
         (data.settings.favoriteLeague.value as string) || 'NONE';
       this.favoriteNBATeams =
         (data.settings.favoriteNBATeams.value as string[]) || [];
       this.favoriteNFLTeams =
         (data.settings.favoriteNFLTeams.value as string[]) || [];
+      this.selectedNCAAFTeams =
+        (data.settings.selectedNCAAFTeams.value as string[]) || [];
       this.favoriteMLSTeams =
         (data.settings.favoriteMLSTeams.value as string[]) || [];
 

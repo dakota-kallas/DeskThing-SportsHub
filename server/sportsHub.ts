@@ -82,32 +82,26 @@ class SportsHubService {
     const now = new Date();
     const localDate = this.getFormattedDate(now);
 
+    // Reset allGames array before updating
+    this.sportsHubData.allGames = [];
+
     await this.updateLeagueData(now, localDate);
-    DeskThing.sendLog(
-      `[BEFORE SORT] Amount of NBA games: ${this.sportsHubData.nbaGames?.length}`
-    );
-    DeskThing.sendLog(
-      `[BEFORE SORT] Amount of All games: ${this.sportsHubData.allGames?.length}`
-    );
     this.consolidateAndSortGames();
-    DeskThing.sendLog(
-      `[AFTER SORT] Amount of NBA games: ${this.sportsHubData.nbaGames?.length}`
-    );
-    DeskThing.sendLog(
-      `[AFTER SORT] Amount of All games: ${this.sportsHubData.allGames?.length}`
-    );
     this.updateLastUpdateTime(now);
   }
 
   private getFormattedDate(date: Date): string {
-    return date.toISOString().split('T')[0];
+    const localYear = date.getFullYear();
+    const localMonth = String(date.getMonth() + 1).padStart(2, '0');
+    const localDay = String(date.getDate()).padStart(2, '0');
+    const localDate = `${localYear}-${localMonth}-${localDay}`;
+    return localDate;
   }
 
   private async updateLeagueData(now: Date, localDate: string) {
     const leagueUpdates = this.state.leaguesToShow.map(async (league) => {
-      DeskThing.sendLog(`Updating ${league} data...`);
       if (this.shouldUpdateLeague(league as League, now)) {
-        DeskThing.sendLog(`Fetching ${league} games...`);
+        DeskThing.sendLog(`Updating ${league} data...`);
         const games = await this.fetchLeagueGames(league as League, localDate);
         this.sportsHubData[`${league.toLowerCase()}Games`] = games;
       }

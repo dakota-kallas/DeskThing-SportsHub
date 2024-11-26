@@ -88,6 +88,12 @@ class SportsHubService {
     await this.updateLeagueData(now, localDate);
     this.consolidateAndSortGames();
     this.updateLastUpdateTime(now);
+
+    DeskThing.sendLog(`Sports Hub updated`);
+    DeskThing.sendDataToClient({
+      type: 'sportshub_data',
+      payload: this.sportsHubData,
+    });
   }
 
   private getFormattedDate(date: Date): string {
@@ -269,21 +275,7 @@ class SportsHubService {
 
   private sortGames(games: Game[]): Game[] {
     return games.sort((a, b) => {
-      // Sort by status
-      const statusDiff =
-        (STATUS_ORDER[a.statusType] ?? 0) - (STATUS_ORDER[b.statusType] ?? 0);
-      if (statusDiff !== 0) return statusDiff;
-
-      // Sort by favorite league
-      if (this.state.favoriteLeague !== 'NONE') {
-        const aIsFavoriteLeague = a.league === this.state.favoriteLeague;
-        const bIsFavoriteLeague = b.league === this.state.favoriteLeague;
-        if (aIsFavoriteLeague !== bIsFavoriteLeague) {
-          return aIsFavoriteLeague ? -1 : 1;
-        }
-      }
-
-      // Sort by favorite teams
+      // Prioritize favorite teams first, regardless of status
       const aHasFavoriteTeam = this.hasTeamInGame(
         a,
         this.state.favoriteTeams[a.league as League]
@@ -292,11 +284,26 @@ class SportsHubService {
         b,
         this.state.favoriteTeams[b.league as League]
       );
-      return aHasFavoriteTeam === bHasFavoriteTeam
-        ? 0
-        : aHasFavoriteTeam
-        ? -1
-        : 1;
+      if (aHasFavoriteTeam !== bHasFavoriteTeam) {
+        return aHasFavoriteTeam ? -1 : 1;
+      }
+  
+      // Then sort by status
+      const statusDiff =
+        (STATUS_ORDER[a.statusType] ?? 0) - (STATUS_ORDER[b.statusType] ?? 0);
+      if (statusDiff !== 0) return statusDiff;
+  
+      // Then prioritize favorite league
+      if (this.state.favoriteLeague !== 'NONE') {
+        const aIsFavoriteLeague = a.league === this.state.favoriteLeague;
+        const bIsFavoriteLeague = b.league === this.state.favoriteLeague;
+        if (aIsFavoriteLeague !== bIsFavoriteLeague) {
+          return aIsFavoriteLeague ? -1 : 1;
+        }
+      }
+  
+      // Default sorting
+      return 0;
     });
   }
 

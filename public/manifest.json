@@ -13,5 +13,5 @@
   "description": "The Sports Hub app for DeskThing delivers instant, at-a-glance access to live sports updates, keeping you informed in real time.",
   "author": "Dakota Kallas",
   "platforms": ["linux", "windows", "mac"],
-  "homepage": "https://github.com/dakota-kallas/DeskThing-SportsHub"
+  "repository": "https://github.com/dakota-kallas/DeskThing-SportsHub"
 }

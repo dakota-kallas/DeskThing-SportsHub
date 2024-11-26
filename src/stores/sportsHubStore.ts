@@ -15,9 +15,25 @@ export type SportsHubData = {
    */
   nflGames?: Game[];
   /**
+   * NHL Game list
+   */
+  nhlGames?: Game[];
+  /**
    * MLS Game list
    */
   mlsGames?: Game[];
+  /**
+   * Serie A Game list
+   */
+  serieaGames?: Game[];
+  /**
+   * La Liga Game list
+   */
+  laligaGames?: Game[];
+  /**
+   * Champions League Game list
+   */
+  championsleagueGames?: Game[];
   /**
    * NCAA Football Game list
    */
@@ -31,7 +47,11 @@ export type SportsHubData = {
 export enum League {
   NBA = 'NBA',
   NFL = 'NFL',
+  NHL = 'NHL',
   MLS = 'MLS',
+  SerieA = 'SerieA',
+  LaLiga = 'LaLiga',
+  ChampionsLeague = 'ChampionsLeague',
   NCAAF = 'NCAAF',
 }
 

@@ -8,13 +8,40 @@ import {
 } from '../src/stores/sportsHubStore';
 
 // Types and Constants
-type League = 'NFL' | 'NBA' | 'MLS' | 'NCAAF';
+type League =
+  | 'NFL'
+  | 'NBA'
+  | 'MLS'
+  | 'NCAAF'
+  | 'NHL'
+  | 'SerieA'
+  | 'LaLiga'
+  | 'ChampionsLeague';
 
 const LEAGUE_CONFIGS = {
   MLS: {
     url: (date: string) =>
       `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=${date}&v=2`,
     subleague: 'soccer.l.mls',
+  },
+  SerieA: {
+    url: (date: string) =>
+      `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=${date}&v=2`,
+    subleague: 'soccer.l.fbit',
+  },
+  LaLiga: {
+    url: (date: string) =>
+      `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=${date}&v=2`,
+    subleague: 'soccer.l.fbes',
+  },
+  ChampionsLeague: {
+    url: (date: string) =>
+      `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=${date}&v=2`,
+    subleague: 'soccer.l.fbchampions',
+  },
+  NHL: {
+    url: (date: string) =>
+      `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=nhl&date=${date}&v=2`,
   },
   NBA: {
     url: (date: string) =>
@@ -56,7 +83,11 @@ class SportsHubService {
     favoriteTeams: {
       NFL: [],
       NBA: [],
+      NHL: [],
       MLS: [],
+      SerieA: [],
+      LaLiga: [],
+      ChampionsLeague: [],
       NCAAF: [],
     },
   };
@@ -204,8 +235,15 @@ class SportsHubService {
     league: League,
     teamsMap: Record<string, Team>
   ): boolean {
-    if (league === 'MLS') {
-      return game.subleague === LEAGUE_CONFIGS.MLS.subleague;
+    switch (league) {
+      case 'MLS':
+        return game.subleague === LEAGUE_CONFIGS.MLS.subleague;
+      case 'SerieA':
+        return game.subleague === LEAGUE_CONFIGS.SerieA.subleague;
+      case 'LaLiga':
+        return game.subleague === LEAGUE_CONFIGS.LaLiga.subleague;
+      case 'ChampionsLeague':
+        return game.subleague === LEAGUE_CONFIGS.ChampionsLeague.subleague;
     }
 
     if (league === 'NCAAF') {
@@ -287,12 +325,12 @@ class SportsHubService {
       if (aHasFavoriteTeam !== bHasFavoriteTeam) {
         return aHasFavoriteTeam ? -1 : 1;
       }
-  
+
       // Then sort by status
       const statusDiff =
         (STATUS_ORDER[a.statusType] ?? 0) - (STATUS_ORDER[b.statusType] ?? 0);
       if (statusDiff !== 0) return statusDiff;
-  
+
       // Then prioritize favorite league
       if (this.state.favoriteLeague !== 'NONE') {
         const aIsFavoriteLeague = a.league === this.state.favoriteLeague;
@@ -301,7 +339,7 @@ class SportsHubService {
           return aIsFavoriteLeague ? -1 : 1;
         }
       }
-  
+
       // Default sorting
       return 0;
     });
@@ -360,8 +398,14 @@ class SportsHubService {
         favoriteTeams: {
           NBA: (data.settings.favoriteNBATeams.value as string[]) || [],
           NFL: (data.settings.favoriteNFLTeams.value as string[]) || [],
+          NHL: (data.settings.favoriteNHLTeams.value as string[]) || [],
           NCAAF: (data.settings.selectedNCAAFTeams.value as string[]) || [],
           MLS: (data.settings.favoriteMLSTeams.value as string[]) || [],
+          SerieA: (data.settings.favoriteSerieATeams.value as string[]) || [],
+          LaLiga: (data.settings.favoriteLaLigaTeams.value as string[]) || [],
+          ChampionsLeague:
+            (data.settings.favoriteChampionsLeagueTeams.value as string[]) ||
+            [],
         },
       };
 

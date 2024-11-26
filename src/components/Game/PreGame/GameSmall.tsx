@@ -3,6 +3,10 @@ import nbaLogo from '../../../assets/logo/nba.png';
 import nflLogo from '../../../assets/logo/nfl.png';
 import mlsLogo from '../../../assets/logo/mls.png';
 import ncaafLogo from '../../../assets/logo/ncaaf.png';
+import nhlLogo from '../../../assets/logo/nhl.png';
+import serieALogo from '../../../assets/logo/seriea.png';
+import laLigaLogo from '../../../assets/logo/laliga.png';
+import championsLeagueLogo from '../../../assets/logo/championsleague.png';
 import './gamesmall.css';
 
 interface GameSmallProps {
@@ -24,6 +28,18 @@ const GameSmall = ({ gameData }: GameSmallProps) => {
       break;
     case League.MLS:
       logo = mlsLogo;
+      break;
+    case League.NHL:
+      logo = nhlLogo;
+      break;
+    case League.SerieA:
+      logo = serieALogo;
+      break;
+    case League.LaLiga:
+      logo = laLigaLogo;
+      break;
+    case League.ChampionsLeague:
+      logo = championsLeagueLogo;
       break;
     default:
       logo = '';
@@ -76,9 +92,16 @@ const GameSmall = ({ gameData }: GameSmallProps) => {
   }
 
   let recordClass = 'team--record';
-  if (gameData.league === League.MLS) {
+  if (
+    gameData.league === League.MLS ||
+    gameData.league === League.SerieA ||
+    gameData.league === League.LaLiga ||
+    gameData.league === League.ChampionsLeague
+  ) {
     recordClass += ' team--smallText';
   }
+
+  const league = gameData.league.replace(/([a-z])([A-Z])/g, '$1 $2');
 
   return (
     <div className='game game--small'>
@@ -109,7 +132,7 @@ const GameSmall = ({ gameData }: GameSmallProps) => {
         </div>
       </div>
       <div className='game--info'>
-        <p>{gameData.league.toUpperCase()}</p>
+        <p>{league}</p>
         {gameData.tvCoverage && <p>TV: {gameData.tvCoverage}</p>}
       </div>
     </div>

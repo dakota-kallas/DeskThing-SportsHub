@@ -16,6 +16,7 @@ type League =
   | 'NHL'
   | 'SerieA'
   | 'LaLiga'
+  | 'PremierLeague'
   | 'ChampionsLeague';
 
 const LEAGUE_CONFIGS = {
@@ -38,6 +39,11 @@ const LEAGUE_CONFIGS = {
     url: (date: string) =>
       `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=${date}&v=2`,
     subleague: 'soccer.l.fbchampions',
+  },
+  PremierLeague: {
+    url: (date: string) =>
+      `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=${date}&v=2`,
+    subleague: 'soccer.l.fbgb',
   },
   NHL: {
     url: (date: string) =>
@@ -88,6 +94,7 @@ class SportsHubService {
       SerieA: [],
       LaLiga: [],
       ChampionsLeague: [],
+      PremierLeague: [],
       NCAAF: [],
     },
   };
@@ -244,6 +251,8 @@ class SportsHubService {
         return game.subleague === LEAGUE_CONFIGS.LaLiga.subleague;
       case 'ChampionsLeague':
         return game.subleague === LEAGUE_CONFIGS.ChampionsLeague.subleague;
+      case 'PremierLeague':
+        return game.subleague === LEAGUE_CONFIGS.PremierLeague.subleague;
     }
 
     if (league === 'NCAAF') {
@@ -406,6 +415,8 @@ class SportsHubService {
           ChampionsLeague:
             (data.settings.favoriteChampionsLeagueTeams.value as string[]) ||
             [],
+          PremierLeague:
+            (data.settings.favoritePremierLeagueTeams.value as string[]) || [],
         },
       };
 

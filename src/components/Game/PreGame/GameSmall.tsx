@@ -7,6 +7,7 @@ import nhlLogo from '../../../assets/logo/nhl.png';
 import serieALogo from '../../../assets/logo/seriea.png';
 import laLigaLogo from '../../../assets/logo/laliga.png';
 import championsLeagueLogo from '../../../assets/logo/championsleague.png';
+import premierLeagueLogo from '../../../assets/logo/premierleague.png';
 import './gamesmall.css';
 
 interface GameSmallProps {
@@ -40,6 +41,9 @@ const GameSmall = ({ gameData }: GameSmallProps) => {
       break;
     case League.ChampionsLeague:
       logo = championsLeagueLogo;
+      break;
+    case League.PremierLeague:
+      logo = premierLeagueLogo;
       break;
     default:
       logo = '';
@@ -96,6 +100,7 @@ const GameSmall = ({ gameData }: GameSmallProps) => {
     gameData.league === League.MLS ||
     gameData.league === League.SerieA ||
     gameData.league === League.LaLiga ||
+    gameData.league === League.PremierLeague ||
     gameData.league === League.ChampionsLeague
   ) {
     recordClass += ' team--smallText';

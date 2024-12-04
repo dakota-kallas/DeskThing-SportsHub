@@ -71,6 +71,7 @@ const setupSettings = async () => {
       { label: 'Serie A', value: 'SerieA' },
       { label: 'LaLiga', value: 'LaLiga' },
       { label: 'Champions League', value: 'ChampionsLeague' },
+      { label: 'Premier League', value: 'PremierLeague' },
       { label: 'NCAAF', value: 'NCAAF' },
     ],
   };
@@ -88,6 +89,7 @@ const setupSettings = async () => {
       { label: 'Serie A', value: 'SerieA' },
       { label: 'LaLiga', value: 'LaLiga' },
       { label: 'Champions League', value: 'ChampionsLeague' },
+      { label: 'Premier League', value: 'PremierLeague' },
       { label: 'NCAAF', value: 'NCAAF' },
     ],
   };
@@ -625,6 +627,35 @@ const setupSettings = async () => {
     ],
   };
 
+  const favoritePremierLeagueTeamsSetting: SettingsMultiSelect = {
+    label: 'Favorite Premier League Teams',
+    description: 'Select your favorite Premier League teams.',
+    value: [],
+    type: 'multiselect',
+    options: [
+      { label: 'AFC Bournemouth', value: 'AFC' },
+      { label: 'Arsenal', value: 'ARS' },
+      { label: 'Aston Villa', value: 'AVL' },
+      { label: 'Brentford', value: 'BRE' },
+      { label: 'Brighton & Hove Albion', value: 'BHA' },
+      { label: 'Chelsea', value: 'CHE' },
+      { label: 'Crystal Palace', value: 'CRY' },
+      { label: 'Everton', value: 'EVE' },
+      { label: 'Fulham', value: 'FUL' },
+      { label: 'Ipswich Town', value: 'IPS' },
+      { label: 'Leicester City', value: 'LEI' },
+      { label: 'Liverpool', value: 'LIV' },
+      { label: 'Manchester City', value: 'MCI' },
+      { label: 'Manchester United', value: 'MUN' },
+      { label: 'Newcastle United', value: 'NEW' },
+      { label: 'Nottingham Forest', value: 'NTG' },
+      { label: 'Southampton', value: 'SOU' },
+      { label: 'Tottenham Hotspur', value: 'TOT' },
+      { label: 'West Ham United', value: 'WHU' },
+      { label: 'Wolverhampton Wanderers', value: 'WOL' },
+    ],
+  };
+
   DeskThing.addSettings({
     refreshInterval: refreshIntervalSetting,
     favoriteLeague: favoriteLeagueSetting,
@@ -637,6 +668,7 @@ const setupSettings = async () => {
     favoriteSerieATeams: favoriteSerieATeamsSetting,
     favoriteLaLigaTeams: favoriteLaLigaTeamsSetting,
     favoriteChampionsLeagueTeams: favoriteChampionsLeagueTeamsSetting,
+    favoritePremierLeagueTeams: favoritePremierLeagueTeamsSetting,
   });
 };
 

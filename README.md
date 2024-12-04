@@ -18,13 +18,15 @@ The Sports Hub app for DeskThing delivers instant, at-a-glance access to live sp
 - <img src="https://github.com/user-attachments/assets/ecc7785f-9a30-4a17-a1d4-05caeb361519" height="30" /> MLS
 - <img src="https://github.com/user-attachments/assets/4e3e45c8-771d-44e1-a7fc-7b90de497f12" height="30" /> LaLiga
 - <img src="https://github.com/user-attachments/assets/efdf40fb-0aed-4696-b22d-8d667fa0b4ad" height="30" /> Champions League
+- <img src="https://github.com/user-attachments/assets/677f4374-149e-4796-a2e7-a026e4bf5f2a" height="30" /> Premier League
 - <img src="https://github.com/user-attachments/assets/9986607c-1529-4a76-b662-e86f23754fc7" height="30" /> Serie A
 - <img src="https://github.com/user-attachments/assets/2f16c5b3-449e-4ad6-aeaa-ca5eb90a719b" height="30" /> NCAAF (College Football)
 
 ### Future Support
 
 - MLB
-- Premier League
+- NCAA Men's Basketball
+- NCAA Women's Basketball
 - Any other suggestions!
 
 ## Installation

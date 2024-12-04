@@ -35,6 +35,10 @@ export type SportsHubData = {
    */
   championsleagueGames?: Game[];
   /**
+   * Premier League Game list
+   */
+  premierleagueGames?: Game[];
+  /**
    * NCAA Football Game list
    */
   ncaafGames?: Game[];
@@ -52,6 +56,7 @@ export enum League {
   SerieA = 'SerieA',
   LaLiga = 'LaLiga',
   ChampionsLeague = 'ChampionsLeague',
+  PremierLeague = 'PremierLeague',
   NCAAF = 'NCAAF',
 }
 

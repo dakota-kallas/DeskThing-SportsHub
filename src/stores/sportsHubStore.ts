@@ -116,7 +116,7 @@ export class SportsHubStore {
 
   constructor() {
     this.deskThing = DeskThing.getInstance();
-    this.deskThing.on('sportshub', (data: SocketData) => {
+    this.deskThing.on('sportshub_data', (data: SocketData) => {
       this.sportsHubData = data.payload as SportsHubData;
       this.notifyListeners();
     });
@@ -148,7 +148,7 @@ export class SportsHubStore {
     if (!this.sportsHubData) {
       this.getSportsHubData();
     }
-    this.deskThing.sendMessageToParent({
+    this.deskThing.send({
       app: 'client',
       type: 'log',
       payload: 'Getting Sports Hub data',
@@ -156,7 +156,7 @@ export class SportsHubStore {
     this.listeners.forEach((listener) => listener(this.sportsHubData));
   }
   async requestSportsHubData(): Promise<void> {
-    this.deskThing.sendMessageToParent({
+    this.deskThing.send({
       type: 'get',
       request: 'sportshub_data',
     });

@@ -1,7 +1,7 @@
 {
   "name": "sportshub",
   "private": true,
-  "version": "1.3.0",
+  "version": "1.4.0",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
@@ -13,8 +13,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "deskthing-client": "^0.9.3",
-    "deskthing-server": "^0.9.1",
+    "deskthing-client": "^0.10.1",
+    "deskthing-server": "^0.10.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

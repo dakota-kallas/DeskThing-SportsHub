@@ -394,7 +394,7 @@ class SportsHubService {
 
   public updateData(data: DataInterface) {
     if (!data.settings) {
-      DeskThing.sendLog('No settings defined');
+      DeskThing.sendWarning('No settings defined');
       return;
     }
 
@@ -422,7 +422,7 @@ class SportsHubService {
 
       this.updateSportsHub();
     } catch (error) {
-      DeskThing.sendLog(`Error updating Sports Hub data: ${error}`);
+      DeskThing.sendWarning(`Error updating Sports Hub data: ${error}`);
     }
   }
 

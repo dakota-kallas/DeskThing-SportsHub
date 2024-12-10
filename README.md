@@ -39,7 +39,7 @@ Make sure you have the following installed:
 
 ### Setup
 
-Current as of DeskThing v0.9.3
+Current as of DeskThing v0.10.0
 
 1. Download the latest release build
 2. Navigate to the `Downloads > App` tab and click on `Upload App`

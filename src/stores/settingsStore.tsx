@@ -21,7 +21,7 @@ export class SettingsStore {
     this.listeners.push(
       this.deskthing.on('time', this.handleClient.bind(this))
     );
-    this.deskthing.sendMessageToParent({ app: 'server', type: 'get' });
+    this.deskthing.send({ app: 'server', type: 'get' });
   }
 
   static getInstance(): SettingsStore {
@@ -31,8 +31,8 @@ export class SettingsStore {
     return SettingsStore.instance;
   }
 
-  private handleSetting(data: Settings) {
-    this.currentSettings = data;
+  private handleSetting(data: SocketData) {
+    this.currentSettings = data.payload as Settings;
     if (this.currentSettings != null) {
       this.settingsListeners.forEach((listener) =>
         listener(this.currentSettings as Settings)
@@ -40,14 +40,14 @@ export class SettingsStore {
     }
   }
 
-  private handleClient(data: string) {
-    this.time = data;
+  private handleClient(data: SocketData) {
+    this.time = data.payload as string;
     this.timeListeners.forEach((listener) => listener(this.time));
   }
 
   getSettings(): Settings | null {
     if (!this.currentSettings) {
-      this.deskthing.sendMessageToParent({
+      this.deskthing.send({
         app: 'client',
         type: 'get',
         request: 'settings',
@@ -57,7 +57,7 @@ export class SettingsStore {
   }
 
   getTime(): string {
-    this.deskthing.sendMessageToParent({ app: 'server', type: 'get' });
+    this.deskthing.send({ app: 'server', type: 'get' });
     return this.time;
   }
 

@@ -73,6 +73,7 @@ const setupSettings = async () => {
       { label: 'LaLiga', value: 'LaLiga' },
       { label: 'Champions League', value: 'ChampionsLeague' },
       { label: 'Premier League', value: 'PremierLeague' },
+      { label: 'Bundesliga', value: 'Bundesliga' },
       { label: 'NCAAF', value: 'NCAAF' },
     ],
   };
@@ -92,6 +93,7 @@ const setupSettings = async () => {
       { label: 'LaLiga', value: 'LaLiga' },
       { label: 'Champions League', value: 'ChampionsLeague' },
       { label: 'Premier League', value: 'PremierLeague' },
+      { label: 'Bundesliga', value: 'Bundesliga' },
       { label: 'NCAAF', value: 'NCAAF' },
     ],
   };
@@ -697,6 +699,33 @@ const setupSettings = async () => {
     ],
   };
 
+  const favoriteBundesligaTeamsSetting: SettingsMultiSelect = {
+    label: 'Favorite Bundesliga Teams',
+    description: 'Select your favorite Bundesliga teams.',
+    value: [],
+    type: 'multiselect',
+    options: [
+      { label: '1. FC Heidenheim', value: 'FCH' },
+      { label: '1. FC Union Berlin', value: 'UNB' },
+      { label: '1899 Hoffenheim', value: 'HOF' },
+      { label: 'Bayer 04 Leverkusen', value: 'B04' },
+      { label: 'Bayern Munich', value: 'FCB' },
+      { label: 'Borussia Dortmund', value: 'BVB' },
+      { label: 'Borussia Mönchengladbach', value: 'BMG' },
+      { label: 'Eintracht Frankfurt', value: 'FFM' },
+      { label: 'FC Augsburg', value: 'AUG' },
+      { label: 'FC St. Pauli', value: 'PAU' },
+      { label: 'Holstein Kiel', value: 'HOLS' },
+      { label: 'Mainz 05', value: 'M05' },
+      { label: 'RB Leipzig', value: 'RBL' },
+      { label: 'SC Freiburg', value: 'SCF' },
+      { label: 'VfB Stuttgart', value: 'VFB' },
+      { label: 'VfL Bochum', value: 'BOC' },
+      { label: 'VfL Wolfsburg', value: 'WOB' },
+      { label: 'Werder Bremen', value: 'BRE' },
+    ],
+  };
+
   DeskThing.addSettings({
     refreshInterval: refreshIntervalSetting,
     favoriteLeague: favoriteLeagueSetting,
@@ -711,6 +740,7 @@ const setupSettings = async () => {
     favoriteLaLigaTeams: favoriteLaLigaTeamsSetting,
     favoriteChampionsLeagueTeams: favoriteChampionsLeagueTeamsSetting,
     favoritePremierLeagueTeams: favoritePremierLeagueTeamsSetting,
+    favoriteBundesligaTeams: favoriteBundesligaTeamsSetting,
   });
 };
 

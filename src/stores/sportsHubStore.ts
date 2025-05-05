@@ -58,6 +58,7 @@ export enum League {
   LaLiga = 'LaLiga',
   ChampionsLeague = 'ChampionsLeague',
   PremierLeague = 'PremierLeague',
+  Bundesliga = 'Bundesliga',
   NCAAF = 'NCAAF',
 }
 

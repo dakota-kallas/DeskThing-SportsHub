@@ -11,6 +11,7 @@ import {
 type League =
   | 'NFL'
   | 'NBA'
+  | 'MLB'
   | 'MLS'
   | 'NCAAF'
   | 'NHL'
@@ -20,6 +21,10 @@ type League =
   | 'ChampionsLeague';
 
 const LEAGUE_CONFIGS = {
+  MLB: {
+    url: (date: string) =>
+      `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=mlb&date=${date}&v=2`,
+  },
   MLS: {
     url: (date: string) =>
       `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=${date}&v=2`,
@@ -90,6 +95,7 @@ class SportsHubService {
       NFL: [],
       NBA: [],
       NHL: [],
+      MLB: [],
       MLS: [],
       SerieA: [],
       LaLiga: [],
@@ -407,6 +413,7 @@ class SportsHubService {
         favoriteTeams: {
           NBA: (data.settings.favoriteNBATeams.value as string[]) || [],
           NFL: (data.settings.favoriteNFLTeams.value as string[]) || [],
+          MLB: (data.settings.favoriteMLBTeams.value as string[]) || [],
           NHL: (data.settings.favoriteNHLTeams.value as string[]) || [],
           NCAAF: (data.settings.selectedNCAAFTeams.value as string[]) || [],
           MLS: (data.settings.favoriteMLSTeams.value as string[]) || [],

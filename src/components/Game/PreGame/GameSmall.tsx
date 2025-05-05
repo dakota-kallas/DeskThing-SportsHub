@@ -1,6 +1,7 @@
 import { Game as GameData, League } from '../../../stores/sportsHubStore';
 import nbaLogo from '../../../assets/logo/nba.png';
 import nflLogo from '../../../assets/logo/nfl.png';
+import mlbLogo from '../../../assets/logo/mlb.png';
 import mlsLogo from '../../../assets/logo/mls.png';
 import ncaafLogo from '../../../assets/logo/ncaaf.png';
 import nhlLogo from '../../../assets/logo/nhl.png';
@@ -8,6 +9,7 @@ import serieALogo from '../../../assets/logo/seriea.png';
 import laLigaLogo from '../../../assets/logo/laliga.png';
 import championsLeagueLogo from '../../../assets/logo/championsleague.png';
 import premierLeagueLogo from '../../../assets/logo/premierleague.png';
+import bundesligaLogo from '../../../assets/logo/bundesliga.png';
 import './gamesmall.css';
 
 interface GameSmallProps {
@@ -27,6 +29,9 @@ const GameSmall = ({ gameData }: GameSmallProps) => {
     case League.NCAAF:
       logo = ncaafLogo;
       break;
+    case League.MLB:
+      logo = mlbLogo;
+      break;
     case League.MLS:
       logo = mlsLogo;
       break;
@@ -44,6 +49,9 @@ const GameSmall = ({ gameData }: GameSmallProps) => {
       break;
     case League.PremierLeague:
       logo = premierLeagueLogo;
+      break;
+    case League.Bundesliga:
+      logo = bundesligaLogo;
       break;
     default:
       logo = '';
@@ -101,6 +109,7 @@ const GameSmall = ({ gameData }: GameSmallProps) => {
     gameData.league === League.SerieA ||
     gameData.league === League.LaLiga ||
     gameData.league === League.PremierLeague ||
+    gameData.league === League.Bundesliga ||
     gameData.league === League.ChampionsLeague
   ) {
     recordClass += ' team--smallText';

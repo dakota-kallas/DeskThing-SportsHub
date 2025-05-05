@@ -11,15 +11,21 @@ import {
 type League =
   | 'NFL'
   | 'NBA'
+  | 'MLB'
   | 'MLS'
   | 'NCAAF'
   | 'NHL'
   | 'SerieA'
   | 'LaLiga'
   | 'PremierLeague'
+  | 'Bundesliga'
   | 'ChampionsLeague';
 
 const LEAGUE_CONFIGS = {
+  MLB: {
+    url: (date: string) =>
+      `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=mlb&date=${date}&v=2`,
+  },
   MLS: {
     url: (date: string) =>
       `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=${date}&v=2`,
@@ -44,6 +50,11 @@ const LEAGUE_CONFIGS = {
     url: (date: string) =>
       `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=${date}&v=2`,
     subleague: 'soccer.l.fbgb',
+  },
+  Bundesliga: {
+    url: (date: string) =>
+      `https://api-secure.sports.yahoo.com/v1/editorial/s/scoreboard?lang=en-US&region=US&leagues=soccer&date=${date}&v=2`,
+    subleague: 'soccer.l.fbde',
   },
   NHL: {
     url: (date: string) =>
@@ -90,11 +101,13 @@ class SportsHubService {
       NFL: [],
       NBA: [],
       NHL: [],
+      MLB: [],
       MLS: [],
       SerieA: [],
       LaLiga: [],
       ChampionsLeague: [],
       PremierLeague: [],
+      Bundesliga: [],
       NCAAF: [],
     },
   };
@@ -253,6 +266,8 @@ class SportsHubService {
         return game.subleague === LEAGUE_CONFIGS.ChampionsLeague.subleague;
       case 'PremierLeague':
         return game.subleague === LEAGUE_CONFIGS.PremierLeague.subleague;
+      case 'Bundesliga':
+        return game.subleague === LEAGUE_CONFIGS.Bundesliga.subleague;
     }
 
     if (league === 'NCAAF') {
@@ -407,6 +422,7 @@ class SportsHubService {
         favoriteTeams: {
           NBA: (data.settings.favoriteNBATeams.value as string[]) || [],
           NFL: (data.settings.favoriteNFLTeams.value as string[]) || [],
+          MLB: (data.settings.favoriteMLBTeams.value as string[]) || [],
           NHL: (data.settings.favoriteNHLTeams.value as string[]) || [],
           NCAAF: (data.settings.selectedNCAAFTeams.value as string[]) || [],
           MLS: (data.settings.favoriteMLSTeams.value as string[]) || [],
@@ -417,6 +433,8 @@ class SportsHubService {
             [],
           PremierLeague:
             (data.settings.favoritePremierLeagueTeams.value as string[]) || [],
+          Bundesliga:
+            (data.settings.favoriteBundesligaTeams.value as string[]) || [],
         },
       };
 

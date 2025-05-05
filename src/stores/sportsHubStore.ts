@@ -52,11 +52,13 @@ export enum League {
   NBA = 'NBA',
   NFL = 'NFL',
   NHL = 'NHL',
+  MLB = 'MLB',
   MLS = 'MLS',
   SerieA = 'SerieA',
   LaLiga = 'LaLiga',
   ChampionsLeague = 'ChampionsLeague',
   PremierLeague = 'PremierLeague',
+  Bundesliga = 'Bundesliga',
   NCAAF = 'NCAAF',
 }
 

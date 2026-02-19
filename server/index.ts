@@ -210,6 +210,7 @@ const setupSettings = async () => {
       { label: 'St. Louis Blues', value: 'STL' },
       { label: 'Tampa Bay Lightning', value: 'TBL' },
       { label: 'Toronto Maple Leafs', value: 'TOR' },
+      { label: 'Utah Mammoths', value: 'UTA' },
       { label: 'Vancouver Canucks', value: 'VAN' },
       { label: 'Vegas Golden Knights', value: 'VGK' },
       { label: 'Washington Capitals', value: 'WSH' },
